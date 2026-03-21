@@ -1,426 +1,188 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PickleTown Umpire Scoring</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f7f9f4;
-      color: #222;
-    }
-    .page {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    }
-    .hero {
-      background: linear-gradient(135deg, #7ac143, #ddeb3b);
-      border-radius: 24px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-    h1, h2, h3, p {
-      margin-top: 0;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 700;
-    }
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #d7dfcd;
-      border-radius: 12px;
-      margin-bottom: 14px;
-      font-size: 16px;
-    }
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: #7ac143;
-      color: #fff;
-      width: 100%;
-    }
-    .btn-primary:hover {
-      opacity: 0.95;
-    }
-    .match-meta {
-      color: #5f6757;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-    .teams {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 16px;
-    }
-    .team-box {
-      border: 1px solid #e6ecde;
-      border-radius: 18px;
-      padding: 18px;
-      background: #fcfdf9;
-    }
-    .team-name {
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    .players {
-      font-size: 14px;
-      color: #5f6757;
-      margin-bottom: 16px;
-    }
-    .score {
-      font-size: 3rem;
-      font-weight: 900;
-      color: #4e8f2f;
-      margin-bottom: 16px;
-    }
-    .score-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .btn-plus {
-      background: #7ac143;
-      color: #fff;
-      font-size: 24px;
-    }
-    .btn-minus {
-      background: #d9534f;
-      color: #fff;
-      font-size: 24px;
-    }
-    .bottom-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .btn-neutral {
-      background: #eef4e5;
-      color: #222;
-    }
-    .btn-finalize {
-      background: #ddeb3b;
-      color: #222;
-    }
-    .status {
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #eef7e7;
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 6px;
-    }
-    .hidden {
-      display: none;
-    }
-    .message {
-      margin-top: 12px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-    }
-    .message.ok {
-      background: #eef7e7;
-      color: #29561e;
-    }
-    .message.error {
-      background: #fdeaea;
-      color: #8b1f1a;
-    }
-    .small {
-      font-size: 14px;
-      color: #5f6757;
-    }
-    @media (max-width: 768px) {
-      .teams {
-        grid-template-columns: 1fr;
-      }
-      .bottom-actions {
-        grid-template-columns: 1fr;
-      }
-      .score {
-        font-size: 2.5rem;
-      }
-    }
-  </style>
-</head>
-<body>
-  <main class="page">
-    <section class="hero">
-      <h1>PickleTown Umpire Scoring</h1>
-      <p>Login with your Umpire ID and code to open your assigned match.</p>
-    </section>
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec";
 
-    <section class="card" id="loginCard">
-      <h2>Umpire Login</h2>
+  let currentUmpireId = "";
+  let currentFixture = null;
 
-      <label for="umpireId">Umpire ID</label>
-      <input id="umpireId" type="text" placeholder="e.g. UMP001" />
+  function showMessage(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = "message " + type;
+    el.classList.remove("hidden");
+  }
 
-      <label for="loginCode">Login Code</label>
-      <input id="loginCode" type="password" placeholder="Enter your code" />
+  function hideMessage(id) {
+    const el = document.getElementById(id);
+    el.classList.add("hidden");
+    el.textContent = "";
+  }
 
-      <button class="btn-primary" onclick="loginUmpire()">Open My Match</button>
+  async function getJson(params) {
+    const url = `${API_URL}?${new URLSearchParams(params).toString()}`;
+    const res = await fetch(url);
+    return res.json();
+  }
 
-      <div id="loginMessage" class="message hidden"></div>
-    </section>
+  async function loginUmpire() {
+    hideMessage("loginMessage");
 
-    <section class="card hidden" id="fixtureCard">
-      <h2 id="fixtureLeague">Assigned Match</h2>
-      <div class="match-meta" id="fixtureMeta"></div>
-      <div class="status" id="fixtureStatus"></div>
+    const umpireId = document.getElementById("umpireId").value.trim();
+    const loginCode = document.getElementById("loginCode").value.trim();
 
-      <div class="small" id="setInfo" style="margin-top: 12px;"></div>
-
-      <div class="teams">
-        <div class="team-box">
-          <div class="team-name" id="teamAName">Team A</div>
-          <div class="players" id="teamAPlayers">Players</div>
-          <div class="score" id="teamAScore">0</div>
-          <div class="score-buttons">
-            <button class="btn-plus" onclick="addPoint('A')">+</button>
-            <button class="btn-minus" onclick="removePoint('A')">-</button>
-          </div>
-        </div>
-
-        <div class="team-box">
-          <div class="team-name" id="teamBName">Team B</div>
-          <div class="players" id="teamBPlayers">Players</div>
-          <div class="score" id="teamBScore">0</div>
-          <div class="score-buttons">
-            <button class="btn-plus" onclick="addPoint('B')">+</button>
-            <button class="btn-minus" onclick="removePoint('B')">-</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="bottom-actions">
-        <button class="btn-neutral" onclick="undoLastAction()">Undo Last Action</button>
-        <button class="btn-finalize" onclick="finalizeMatch()">Finalize Match</button>
-      </div>
-
-      <div id="fixtureMessage" class="message hidden"></div>
-    </section>
-  </main>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec";
-
-    let currentUmpireId = "";
-    let currentFixture = null;
-
-    function showMessage(id, text, type) {
-      const el = document.getElementById(id);
-      el.textContent = text;
-      el.className = "message " + type;
-      el.classList.remove("hidden");
+    if (!umpireId || !loginCode) {
+      showMessage("loginMessage", "Please enter your Umpire ID and login code.", "error");
+      return;
     }
 
-    function hideMessage(id) {
-      const el = document.getElementById(id);
-      el.classList.add("hidden");
-      el.textContent = "";
-    }
-
-    async function postJson(body) {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
+    try {
+      const data = await getJson({
+        action: "umpireLogin",
+        umpireId,
+        loginCode
       });
-      return res.json();
-    }
 
-    async function loginUmpire() {
-      hideMessage("loginMessage");
-
-      const umpireId = document.getElementById("umpireId").value.trim();
-      const loginCode = document.getElementById("loginCode").value.trim();
-
-      if (!umpireId || !loginCode) {
-        showMessage("loginMessage", "Please enter your Umpire ID and login code.", "error");
+      if (!data.success) {
+        showMessage("loginMessage", data.message || "Login failed.", "error");
         return;
       }
 
-      try {
-        const data = await postJson({
-          action: "umpireLogin",
-          payload: { umpireId, loginCode }
-        });
+      currentUmpireId = umpireId;
 
-        if (!data.success) {
-          showMessage("loginMessage", data.message || "Login failed.", "error");
-          return;
-        }
+      if (!data.fixture) {
+        showMessage("loginMessage", "Login successful, but no fixture is currently assigned.", "ok");
+        return;
+      }
 
-        currentUmpireId = umpireId;
+      currentFixture = data.fixture;
+      renderFixture(data.fixture);
 
-        if (!data.fixture) {
-          showMessage("loginMessage", "Login successful, but no fixture is currently assigned.", "ok");
-          return;
-        }
+      document.getElementById("loginCard").classList.add("hidden");
+      document.getElementById("fixtureCard").classList.remove("hidden");
+    } catch (error) {
+      showMessage("loginMessage", "Could not connect to the scoring system.", "error");
+    }
+  }
 
+  function renderFixture(fixture) {
+    document.getElementById("fixtureLeague").textContent = fixture.leagueName + " - " + fixture.phase;
+    document.getElementById("fixtureMeta").textContent =
+      `${fixture.date} • ${fixture.startTime} - ${fixture.endTime} • ${fixture.court}`;
+    document.getElementById("fixtureStatus").textContent = fixture.status || "Scheduled";
+
+    document.getElementById("teamAName").textContent = fixture.teamAName;
+    document.getElementById("teamBName").textContent = fixture.teamBName;
+
+    document.getElementById("teamAPlayers").textContent = "Assigned team";
+    document.getElementById("teamBPlayers").textContent = "Assigned team";
+
+    document.getElementById("teamAScore").textContent = fixture.score.currentSetScore.teamA;
+    document.getElementById("teamBScore").textContent = fixture.score.currentSetScore.teamB;
+
+    document.getElementById("setInfo").textContent =
+      `Current Set: ${fixture.score.currentSet} | Sets Won: ${fixture.score.teamASetWins} - ${fixture.score.teamBSetWins}`;
+  }
+
+  async function refreshFixture() {
+    if (!currentUmpireId) return;
+
+    try {
+      const data = await getJson({
+        action: "getUmpireFixture",
+        umpireId: currentUmpireId
+      });
+
+      if (data.success && data.fixture) {
         currentFixture = data.fixture;
         renderFixture(data.fixture);
-
-        document.getElementById("loginCard").classList.add("hidden");
-        document.getElementById("fixtureCard").classList.remove("hidden");
-      } catch (error) {
-        showMessage("loginMessage", "Could not connect to the scoring system.", "error");
       }
-    }
+    } catch (error) {}
+  }
 
-    function renderFixture(fixture) {
-      document.getElementById("fixtureLeague").textContent = fixture.leagueName + " - " + fixture.phase;
-      document.getElementById("fixtureMeta").textContent =
-        `${fixture.date} • ${fixture.startTime} - ${fixture.endTime} • ${fixture.court}`;
-      document.getElementById("fixtureStatus").textContent = fixture.status || "Scheduled";
+  async function sendScoreAction(teamSide, actionType) {
+    hideMessage("fixtureMessage");
 
-      document.getElementById("teamAName").textContent = fixture.teamAName;
-      document.getElementById("teamBName").textContent = fixture.teamBName;
+    if (!currentFixture) return;
 
-      document.getElementById("teamAPlayers").textContent = "Assigned team";
-      document.getElementById("teamBPlayers").textContent = "Assigned team";
+    const teamId = teamSide === "A" ? currentFixture.teamAId : currentFixture.teamBId;
 
-      document.getElementById("teamAScore").textContent = fixture.score.currentSetScore.teamA;
-      document.getElementById("teamBScore").textContent = fixture.score.currentSetScore.teamB;
+    try {
+      const data = await getJson({
+        action: "submitScoreEvent",
+        fixtureId: currentFixture.fixtureId,
+        umpireId: currentUmpireId,
+        teamId: teamId,
+        actionType: actionType
+      });
 
-      document.getElementById("setInfo").textContent =
-        `Current Set: ${fixture.score.currentSet} | Sets Won: ${fixture.score.teamASetWins} - ${fixture.score.teamBSetWins}`;
-    }
-
-    async function refreshFixture() {
-      if (!currentUmpireId) return;
-
-      try {
-        const res = await fetch(`${API_URL}?action=getUmpireFixture&umpireId=${encodeURIComponent(currentUmpireId)}`);
-        const data = await res.json();
-
-        if (data.success && data.fixture) {
-          currentFixture = data.fixture;
-          renderFixture(data.fixture);
-        }
-      } catch (error) {}
-    }
-
-    async function sendScoreAction(teamSide, actionType) {
-      hideMessage("fixtureMessage");
-
-      if (!currentFixture) return;
-
-      const teamId = teamSide === "A" ? currentFixture.teamAId : currentFixture.teamBId;
-
-      try {
-        const data = await postJson({
-          action: "submitScoreEvent",
-          payload: {
-            fixtureId: currentFixture.fixtureId,
-            umpireId: currentUmpireId,
-            teamId: teamId,
-            actionType: actionType
-          }
-        });
-
-        if (!data.success) {
-          showMessage("fixtureMessage", data.message || "Could not update score.", "error");
-          return;
-        }
-
-        await refreshFixture();
-        showMessage("fixtureMessage", "Score updated.", "ok");
-      } catch (error) {
-        showMessage("fixtureMessage", "Could not update score.", "error");
+      if (!data.success) {
+        showMessage("fixtureMessage", data.message || "Could not update score.", "error");
+        return;
       }
+
+      await refreshFixture();
+      showMessage("fixtureMessage", "Score updated.", "ok");
+    } catch (error) {
+      showMessage("fixtureMessage", "Could not update score.", "error");
     }
+  }
 
-    function addPoint(teamSide) {
-      sendScoreAction(teamSide, "ADD_POINT");
-    }
+  function addPoint(teamSide) {
+    sendScoreAction(teamSide, "ADD_POINT");
+  }
 
-    function removePoint(teamSide) {
-      sendScoreAction(teamSide, "REMOVE_POINT");
-    }
+  function removePoint(teamSide) {
+    sendScoreAction(teamSide, "REMOVE_POINT");
+  }
 
-    async function undoLastAction() {
-      hideMessage("fixtureMessage");
+  async function undoLastAction() {
+    hideMessage("fixtureMessage");
 
-      if (!currentFixture) return;
+    if (!currentFixture) return;
 
-      try {
-        const data = await postJson({
-          action: "undoLastScoreEvent",
-          payload: {
-            fixtureId: currentFixture.fixtureId,
-            umpireId: currentUmpireId
-          }
-        });
+    try {
+      const data = await getJson({
+        action: "undoLastScoreEvent",
+        fixtureId: currentFixture.fixtureId,
+        umpireId: currentUmpireId
+      });
 
-        if (!data.success) {
-          showMessage("fixtureMessage", data.message || "Could not undo last action.", "error");
-          return;
-        }
-
-        await refreshFixture();
-        showMessage("fixtureMessage", data.message || "Last action removed.", "ok");
-      } catch (error) {
-        showMessage("fixtureMessage", "Could not undo last action.", "error");
+      if (!data.success) {
+        showMessage("fixtureMessage", data.message || "Could not undo last action.", "error");
+        return;
       }
+
+      await refreshFixture();
+      showMessage("fixtureMessage", data.message || "Last action removed.", "ok");
+    } catch (error) {
+      showMessage("fixtureMessage", "Could not undo last action.", "error");
     }
+  }
 
-    async function finalizeMatch() {
-      hideMessage("fixtureMessage");
+  async function finalizeMatch() {
+    hideMessage("fixtureMessage");
 
-      if (!currentFixture) return;
+    if (!currentFixture) return;
 
-      const confirmed = confirm("Are you sure you want to finalize this match?");
-      if (!confirmed) return;
+    const confirmed = confirm("Are you sure you want to finalize this match?");
+    if (!confirmed) return;
 
-      try {
-        const data = await postJson({
-          action: "finalizeFixture",
-          payload: {
-            fixtureId: currentFixture.fixtureId
-          }
-        });
+    try {
+      const data = await getJson({
+        action: "finalizeFixture",
+        fixtureId: currentFixture.fixtureId
+      });
 
-        if (!data.success) {
-          showMessage("fixtureMessage", data.message || "Could not finalize match.", "error");
-          return;
-        }
-
-        await refreshFixture();
-        showMessage("fixtureMessage", "Match finalized successfully.", "ok");
-      } catch (error) {
-        showMessage("fixtureMessage", "Could not finalize match.", "error");
+      if (!data.success) {
+        showMessage("fixtureMessage", data.message || "Could not finalize match.", "error");
+        return;
       }
-    }
 
-    setInterval(refreshFixture, 10000);
-  </script>
-</body>
-</html>
+      await refreshFixture();
+      showMessage("fixtureMessage", "Match finalized successfully.", "ok");
+    } catch (error) {
+      showMessage("fixtureMessage", "Could not finalize match.", "error");
+    }
+  }
+
+  setInterval(refreshFixture, 10000);
+</script>
