@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PickleTown @Betshalom PickleBall League</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f9f4;
+      color: #222;
+    }
+    .page {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #7ac143, #ddeb3b);
+      border-radius: 24px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+    .hero p {
+      margin: 0;
+      font-size: 1rem;
+    }
+    .section {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+    .section h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #4e8f2f;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+    .live-card {
+      border: 1px solid #e8eddc;
+      border-radius: 16px;
+      padding: 16px;
+      background: #fcfdf9;
+    }
+    .live-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #ddeb3b;
+    }
+    .badge-live {
+      background: #7ac143;
+      color: white;
+    }
+    .score-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid #eef2e6;
+    }
+    .score-row:first-of-type {
+      border-top: none;
+    }
+    .team-name {
+      font-weight: 700;
+    }
+    .score {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #4e8f2f;
+    }
+    .league-block {
+      margin-bottom: 28px;
+    }
+    .league-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #4e8f2f;
+      margin-bottom: 12px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #edf1e6;
+      vertical-align: top;
+    }
+    th {
+      background: #7ac143;
+      color: white;
+      font-size: 14px;
+    }
+    tr:nth-child(even) td {
+      background: #fbfcf8;
+    }
+    .rank-pill {
+      display: inline-block;
+      min-width: 34px;
+      text-align: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #eef7e7;
+      font-weight: 700;
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f0f4ea;
+    }
+    .status-final {
+      background: #ddeb3b;
+    }
+    .status-playoff {
+      background: #e7f6da;
+    }
+    .empty, .small {
+      color: #6d7466;
+      font-size: 14px;
+    }
+    @media (max-width: 768px) {
+      .page { padding: 14px; }
+      .hero { padding: 20px; }
+      .hero h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1 id="leagueName">PickleTown @Betshalom PickleBall League</h1>
+      <p id="seasonName">Loading season...</p>
+    </section>
+
+    <section class="section">
+      <h2>Live Matches</h2>
+      <div id="liveMatches"></div>
+    </section>
+
+    <section class="section">
+      <h2>Completed Matches</h2>
+      <div id="completedMatches"></div>
+    </section>
+
+    <section class="section">
+      <h2>League Standings</h2>
+      <div id="leagueStandings"></div>
+    </section>
+  </main>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec?action=getPublicLeaderboard";
+
+    function statusClass(status) {
+      if (status === "Direct to Grand Final") return "status-pill status-final";
+      if (status === "Challenger Final Spot" || status === "Playoff Spot") {
+        return "status-pill status-playoff";
+      }
+      return "status-pill";
+    }
+
+    function renderLiveMatches(matches) {
+      const container = document.getElementById("liveMatches");
+      if (!matches || matches.length === 0) {
+        container.innerHTML = '<p class="empty">No live matches at the moment.</p>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid">
+          ${matches.map(match => `
+            <div class="live-card">
+              <div class="live-top">
+                <div>
+                  <strong>${match.leagueName}</strong>
+                  <div class="small">${match.phase} • ${match.date} • ${match.startTime} • ${match.court}</div>
+                </div>
+                <span class="badge badge-live">LIVE</span>
+              </div>
+
+              <div class="score-row">
+                <div class="team-name">${match.teamAName}</div>
+                <div class="score">${match.score.currentSetScore.teamA}</div>
+              </div>
+
+              <div class="score-row">
+                <div class="team-name">${match.teamBName}</div>
+                <div class="score">${match.score.currentSetScore.teamB}</div>
+              </div>
+
+              <div class="small" style="margin-top:12px;">
+                Current Set: ${match.score.currentSet} | Sets: ${match.score.teamASetWins} - ${match.score.teamBSetWins}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderCompletedMatches(matches) {
+      const container = document.getElementById("completedMatches");
+      if (!matches || matches.length === 0) {
+        container.innerHTML = '<p class="empty">No completed matches yet.</p>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid">
+          ${matches.map(match => `
+            <div class="live-card">
+              <div class="live-top">
+                <div>
+                  <strong>${match.leagueName}</strong>
+                  <div class="small">${match.phase} • ${match.date} • ${match.startTime} • ${match.court}</div>
+                </div>
+                <span class="badge">${match.winnerTeamName || "Draw"}</span>
+              </div>
+
+              <div class="score-row">
+                <div class="team-name">${match.teamAName}</div>
+                <div class="score">${match.teamASetsWon}</div>
+              </div>
+
+              <div class="score-row">
+                <div class="team-name">${match.teamBName}</div>
+                <div class="score">${match.teamBSetsWon}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderLeagueStandings(leagues) {
+      const container = document.getElementById("leagueStandings");
+      if (!leagues || leagues.length === 0) {
+        container.innerHTML = '<p class="empty">No leagues found.</p>';
+        return;
+      }
+
+      container.innerHTML = leagues.map(league => `
+        <div class="league-block">
+          <div class="league-title">${league.leagueName}</div>
+
+          ${!league.teams || league.teams.length === 0 ? `
+            <p class="empty">No teams in this league yet.</p>
+          ` : `
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Players</th>
+                    <th>Played</th>
+                    <th>Wins</th>
+                    <th>Draws</th>
+                    <th>Losses</th>
+                    <th>Points</th>
+                    <th>Sets</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${league.teams.map(team => `
+                    <tr>
+                      <td><span class="rank-pill">${team.Rank}</span></td>
+                      <td>${team["Team Name"]}</td>
+                      <td>${team["Player 1"]} &amp; ${team["Player 2"]}</td>
+                      <td>${team["Matches Played"]}</td>
+                      <td>${team.Wins}</td>
+                      <td>${team.Draws}</td>
+                      <td>${team.Losses}</td>
+                      <td>${team.Points}</td>
+                      <td>${team["Sets Won"]} / ${team["Sets Lost"]}</td>
+                      <td>
+                        ${team["Table Status"]
+                          ? `<span class="${statusClass(team["Table Status"])}">${team["Table Status"]}</span>`
+                          : '<span class="small">—</span>'}
+                      </td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </div>
+      `).join("");
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+
+        if (!data.success) {
+          throw new Error("Could not load data");
+        }
+
+        document.getElementById("leagueName").textContent = data.leagueName || "PickleTown @Betshalom PickleBall League";
+        document.getElementById("seasonName").textContent = data.season || "";
+
+        renderLiveMatches(data.liveMatches || []);
+        renderCompletedMatches(data.completedMatches || []);
+        renderLeagueStandings(data.leagues || []);
+      } catch (error) {
+        document.getElementById("seasonName").textContent = "Unable to load live data.";
+        document.getElementById("liveMatches").innerHTML = '<p class="empty">Unable to load live matches.</p>';
+        document.getElementById("completedMatches").innerHTML = '<p class="empty">Unable to load completed matches.</p>';
+        document.getElementById("leagueStandings").innerHTML = '<p class="empty">Unable to load standings.</p>';
+      }
+    }
+
+    loadData();
+    setInterval(loadData, 30000);
+  </script>
+</body>
+</html>
