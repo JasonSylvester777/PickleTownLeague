@@ -65,6 +65,7 @@
       padding: 12px 14px;
       border-radius: 12px;
       font-size: 14px;
+      display: none;
     }
     .ok {
       background: #eef7e7;
@@ -131,7 +132,7 @@
 
       <button onclick="registerTeam()">Submit Registration</button>
 
-      <div id="message" style="display:none;"></div>
+      <div id="message" class="message"></div>
 
       <div class="links">
         <a href="/">View Live Leaderboard</a>
@@ -170,25 +171,15 @@
       }
 
       try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            action: "registerTeam",
-            payload: {
-              teamName,
-              player1,
-              player2,
-              reservePlayer,
-              email,
-              phone
-            }
-          })
+        const data = await getJson({
+          action: "registerTeam",
+          teamName: teamName,
+          player1: player1,
+          player2: player2,
+          reservePlayer: reservePlayer,
+          email: email,
+          phone: phone
         });
-
-        const data = await res.json();
 
         if (!data.success) {
           showMessage(data.message || "Registration failed.", "error");
@@ -204,7 +195,7 @@
         document.getElementById("email").value = "";
         document.getElementById("phone").value = "";
       } catch (error) {
-        showMessage("Could not submit registration. We will switch this page to the browser-friendly API version next if needed.", "error");
+        showMessage("Could not submit registration.", "error");
       }
     }
   </script>
