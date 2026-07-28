@@ -3,201 +3,167 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PickleTown Registration</title>
+  <title>Register a Team | PickleTown @ Betshalom</title>
   <style>
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f7f9f4;
-      color: #222;
+
+    :root {
+      --green: #7ac143;
+      --green-dark: #4e8f2f;
+      --lime: #ddeb3b;
+      --page: #f7f9f4;
+      --text: #222;
+      --muted: #5f6757;
+      --border: #d7dfcd;
+      --danger: #8b1f1a;
     }
-    .page {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .hero {
-      background: linear-gradient(135deg, #7ac143, #ddeb3b);
-      border-radius: 24px;
-      padding: 26px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    }
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 22px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    }
-    h1, h2, p {
-      margin-top: 0;
-    }
-    label {
-      display: block;
-      margin: 14px 0 8px;
-      font-weight: 700;
-    }
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #d7dfcd;
-      border-radius: 12px;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      margin-top: 18px;
-      border: none;
-      border-radius: 12px;
-      padding: 15px 18px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      background: #7ac143;
-      color: white;
-    }
-    button:hover {
-      opacity: 0.95;
-    }
-    .message {
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-      display: none;
-    }
-    .ok {
-      background: #eef7e7;
-      color: #29561e;
-    }
-    .error {
-      background: #fdeaea;
-      color: #8b1f1a;
-    }
-    .small {
-      color: #5f6757;
-      font-size: 14px;
-      margin-top: 8px;
-    }
-    .links {
-      margin-top: 18px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .links a {
-      display: inline-block;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: #eef4e5;
-      color: #222;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 14px;
+
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--page); color: var(--text); }
+    .page { max-width: 940px; margin: 0 auto; padding: 22px; }
+
+    .main-navigation { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .nav-button { display: inline-block; padding: 11px 16px; background: #fff; color: var(--green-dark); border: 2px solid var(--green); border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.2s ease; }
+    .nav-button:hover, .nav-button.active { background: var(--green); color: #fff; }
+
+    .hero { background: linear-gradient(135deg, var(--green), var(--lime)); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.7rem, 4vw, 2.3rem); }
+    .hero p { margin: 0; line-height: 1.55; }
+
+    .card { background: #fff; border-radius: 20px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .card h2 { margin: 4px 0 16px; color: var(--green-dark); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 8px; font-weight: 700; }
+    input, textarea { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 16px; outline: none; }
+    input:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(122,193,67,0.15); }
+
+    .notice { padding: 14px; border-radius: 12px; margin: 8px 0 18px; background: #f5f9ed; border: 1px solid #deebd2; line-height: 1.55; }
+    .checkbox { display: flex; gap: 10px; align-items: flex-start; margin: 18px 0; }
+    .checkbox input { width: auto; margin-top: 3px; }
+    .checkbox label { margin: 0; font-weight: 400; line-height: 1.45; }
+
+    .btn { width: 100%; border: none; border-radius: 12px; padding: 14px 18px; background: var(--green); color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; }
+    .btn:hover { background: var(--green-dark); }
+    .btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .message { display: none; margin-top: 14px; padding: 13px 14px; border-radius: 12px; line-height: 1.45; }
+    .message.show { display: block; }
+    .message.ok { background: #eef7e7; color: #29561e; }
+    .message.error { background: #fdeaea; color: var(--danger); }
+    .small { color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 700px) {
+      .page { padding: 14px; }
+      .hero { padding: 22px; }
+      .form-grid { grid-template-columns: 1fr; gap: 0; }
+      .main-navigation { display: grid; grid-template-columns: 1fr; }
+      .nav-button { text-align: center; }
     }
   </style>
 </head>
 <body>
   <main class="page">
+    <nav class="main-navigation" aria-label="Main navigation">
+      <a href="/" class="nav-button">Live League</a>
+      <a href="/register" class="nav-button active">Register a Team</a>
+      <a href="/umpire-signup" class="nav-button">Register as an Umpire</a>
+      <a href="/umpire" class="nav-button">Umpire Login</a>
+    </nav>
+
     <section class="hero">
-      <h1>PickleTown @Betshalom PickleBall League</h1>
-      <p>Team Registration</p>
-      <p class="small">
-        Register your team for the current season. Teams entering after the active season lock date
-        will automatically be queued for the next season.
-      </p>
+      <h1>Register Your Doubles Team</h1>
+      <p>Register both players together. The once-off registration fee is R100 per player, totalling R200 per doubles team.</p>
     </section>
 
-    <section class="card">
-      <h2>Register Your Team</h2>
-
-      <label for="teamName">Team Name *</label>
-      <input id="teamName" type="text" placeholder="Enter team name" />
-
-      <label for="player1">Player 1 Name *</label>
-      <input id="player1" type="text" placeholder="Enter Player 1 name" />
-
-      <label for="player2">Player 2 Name *</label>
-      <input id="player2" type="text" placeholder="Enter Player 2 name" />
-
-      <label for="reservePlayer">Reserve Player Name</label>
-      <input id="reservePlayer" type="text" placeholder="Optional reserve player" />
-
-      <label for="email">Email Address</label>
-      <input id="email" type="email" placeholder="Enter email address" />
-
-      <label for="phone">Phone Number</label>
-      <input id="phone" type="text" placeholder="Enter phone number" />
-
-      <button onclick="registerTeam()">Submit Registration</button>
-
-      <div id="message" class="message"></div>
-
-      <div class="links">
-        <a href="/">View Live Leaderboard</a>
-        <a href="/umpire">Umpire Scoring</a>
+    <form id="teamForm" class="card">
+      <h2>Team Details</h2>
+      <div class="field">
+        <label for="teamName">Team name</label>
+        <input id="teamName" name="teamName" maxlength="60" required />
       </div>
-    </section>
+
+      <h2>Player 1</h2>
+      <div class="form-grid">
+        <div class="field"><label for="p1Name">Name</label><input id="p1Name" name="p1Name" maxlength="50" required /></div>
+        <div class="field"><label for="p1Surname">Surname</label><input id="p1Surname" name="p1Surname" maxlength="50" required /></div>
+        <div class="field"><label for="p1Phone">Telephone</label><input id="p1Phone" name="p1Phone" type="tel" maxlength="25" placeholder="082 123 4567" required /></div>
+        <div class="field"><label for="p1Email">Email</label><input id="p1Email" name="p1Email" type="email" maxlength="120" required /></div>
+      </div>
+
+      <h2>Player 2</h2>
+      <div class="form-grid">
+        <div class="field"><label for="p2Name">Name</label><input id="p2Name" name="p2Name" maxlength="50" required /></div>
+        <div class="field"><label for="p2Surname">Surname</label><input id="p2Surname" name="p2Surname" maxlength="50" required /></div>
+        <div class="field"><label for="p2Phone">Telephone</label><input id="p2Phone" name="p2Phone" type="tel" maxlength="25" placeholder="082 123 4567" required /></div>
+        <div class="field"><label for="p2Email">Email</label><input id="p2Email" name="p2Email" type="email" maxlength="120" required /></div>
+      </div>
+
+      <div class="field">
+        <label for="notes">Availability notes <span class="small">(optional)</span></label>
+        <textarea id="notes" name="notes" rows="4" maxlength="500" placeholder="Mention any evening that is impossible for your team. Preferences cannot always be guaranteed."></textarea>
+      </div>
+
+      <div class="notice">
+        <strong>Fee summary</strong><br />
+        Once-off registration: R100 per player / R200 per team.<br />
+        Each scheduled match: R50 per player / R100 per team.<br />
+        Bat hire: R20 per bat per hour.
+      </div>
+
+      <div class="checkbox">
+        <input id="consent" name="consent" type="checkbox" required />
+        <label for="consent">We agree to the beta tournament rules, scheduling process, payment terms and tournament communication.</label>
+      </div>
+
+      <button id="submitButton" class="btn" type="submit">Submit Team Registration</button>
+      <div id="formMessage" class="message" role="status" aria-live="polite"></div>
+    </form>
   </main>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec";
 
+    async function apiPost(action, payload) {
+      const body = new URLSearchParams({ action, ...payload });
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: body.toString(),
+        redirect: "follow"
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || "The registration could not be submitted.");
+      return data;
+    }
+
+    const form = document.getElementById("teamForm");
+    const message = document.getElementById("formMessage");
+    const button = document.getElementById("submitButton");
+
     function showMessage(text, type) {
-      const box = document.getElementById("message");
-      box.style.display = "block";
-      box.className = "message " + type;
-      box.textContent = text;
+      message.textContent = text;
+      message.className = "message show " + type;
     }
 
-    async function getJson(params) {
-      const url = API_URL + "?" + new URLSearchParams(params).toString();
-      const res = await fetch(url);
-      return await res.json();
-    }
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      button.disabled = true;
+      button.textContent = "Submitting...";
+      showMessage("Submitting your team registration...", "ok");
 
-    async function registerTeam() {
-      const teamName = document.getElementById("teamName").value.trim();
-      const player1 = document.getElementById("player1").value.trim();
-      const player2 = document.getElementById("player2").value.trim();
-      const reservePlayer = document.getElementById("reservePlayer").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-
-      if (!teamName || !player1 || !player2) {
-        showMessage("Team Name, Player 1 and Player 2 are required.", "error");
-        return;
-      }
+      const payload = Object.fromEntries(new FormData(form).entries());
 
       try {
-        const data = await getJson({
-          action: "registerTeam",
-          teamName: teamName,
-          player1: player1,
-          player2: player2,
-          reservePlayer: reservePlayer,
-          email: email,
-          phone: phone
-        });
-
-        if (!data.success) {
-          showMessage(data.message || "Registration failed.", "error");
-          return;
-        }
-
-        showMessage(data.message || "Registration saved successfully.", "ok");
-
-        document.getElementById("teamName").value = "";
-        document.getElementById("player1").value = "";
-        document.getElementById("player2").value = "";
-        document.getElementById("reservePlayer").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("phone").value = "";
+        const result = await apiPost("registerTeam", payload);
+        showMessage(`Registration successful. Team ID: ${result.teamId}. Registration slot: ${result.registrationSlot}. Confirmation emails have been sent.`, "ok");
+        form.reset();
       } catch (error) {
-        showMessage("Could not submit registration.", "error");
+        showMessage(error.message, "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Submit Team Registration";
       }
-    }
+    });
   </script>
 </body>
 </html>
