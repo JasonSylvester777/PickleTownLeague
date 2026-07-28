@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Umpire Signup | PickleTown Limpopo</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+<header class="site-header"><nav class="nav"><a class="brand" href="/">PickleTown Limpopo</a><div class="nav-links"><a href="/register">Team Signup</a><a href="/umpire">Umpire Login</a><a href="/rules">Rules</a></div></nav></header>
+<main class="page page-narrow">
+  <section class="hero">
+    <h1>Sign Up as an Umpire</h1>
+    <p>Approved umpires receive a secure Umpire ID and login code by email. An umpire earns R50 for each assigned fixture that is completed and finalized.</p>
+  </section>
+  <form id="umpireForm" class="card">
+    <div class="form-grid">
+      <div class="field"><label for="name">Name</label><input id="name" name="name" maxlength="50" required></div>
+      <div class="field"><label for="surname">Surname</label><input id="surname" name="surname" maxlength="50" required></div>
+      <div class="field"><label for="phone">Telephone</label><input id="phone" name="phone" type="tel" maxlength="25" required></div>
+      <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" maxlength="120" required></div>
+    </div>
+    <div class="field"><label for="experience">Experience (optional)</label><textarea id="experience" name="experience" rows="4" maxlength="500" placeholder="Tell us whether you know the standard pickleball rules or have officiating experience."></textarea></div>
+    <p class="checkbox"><input id="agreement" type="checkbox" required><label for="agreement">I agree to apply the published rules fairly, protect my login details and only score matches assigned to me.</label></p>
+    <button id="submitButton" class="btn btn-primary btn-block" type="submit">Register as an Umpire</button>
+    <div id="formMessage" class="message" role="status"></div>
+  </form>
+</main>
+<script src="/assets/config.js"></script>
+<script src="/assets/api.js"></script>
+<script>
+  const form = document.getElementById("umpireForm");
+  const message = document.getElementById("formMessage");
+  const button = document.getElementById("submitButton");
+  function showMessage(text, type) { message.textContent = text; message.className = "message show " + type; }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    button.disabled = true;
+    showMessage("Creating your umpire profile…", "ok");
+    try {
+      const result = await PickleTownApi.post("registerUmpire", Object.fromEntries(new FormData(form).entries()));
+      showMessage(`Umpire registration successful. Your Umpire ID is ${result.umpireId}. Your private login code has been emailed to you.`, "ok");
+      form.reset();
+    } catch (error) {
+      showMessage(error.message, "error");
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
