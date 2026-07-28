@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Umpire Registration | PickleTown @ Betshalom</title>
+  <title>Register as an Umpire | PickleTown @ Betshalom</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -18,294 +18,117 @@
       --danger: #8b1f1a;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--page);
-      color: var(--text);
-    }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--page); color: var(--text); }
+    .page { max-width: 900px; margin: 0 auto; padding: 22px; }
 
-    .page {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+    .main-navigation { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .nav-button { display: inline-block; padding: 11px 16px; background: #fff; color: var(--green-dark); border: 2px solid var(--green); border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.2s ease; }
+    .nav-button:hover, .nav-button.active { background: var(--green); color: #fff; }
 
-    .top-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
+    .hero { background: linear-gradient(135deg, var(--green), var(--lime)); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.7rem, 4vw, 2.3rem); }
+    .hero p { margin: 0; line-height: 1.55; }
 
-    .brand {
-      color: var(--green-dark);
-      font-size: 1.15rem;
-      font-weight: 800;
-      text-decoration: none;
-    }
+    .card { background: #fff; border-radius: 20px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .card h2 { margin: 0 0 8px; color: var(--green-dark); }
+    .section-intro { color: var(--muted); line-height: 1.5; margin: 0 0 20px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 8px; font-weight: 700; }
+    input, textarea { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 16px; outline: none; }
+    input:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(122,193,67,0.15); }
 
-    .nav-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .info-box { padding: 14px; border-radius: 14px; background: #f8fbf3; border: 1px solid #e0ead7; }
+    .info-box strong { display: block; color: var(--green-dark); margin-bottom: 5px; }
+    .small { color: var(--muted); font-size: 14px; line-height: 1.45; }
 
-    .nav-links a {
-      display: inline-block;
-      padding: 9px 13px;
-      border: 1px solid #dce6d3;
-      border-radius: 999px;
-      background: #fff;
-      color: var(--green-dark);
-      font-size: 14px;
-      font-weight: 700;
-      text-decoration: none;
-    }
+    .checkbox { display: flex; gap: 10px; align-items: flex-start; margin: 18px 0; }
+    .checkbox input { width: auto; margin-top: 3px; }
+    .checkbox label { margin: 0; font-weight: 400; line-height: 1.45; }
 
-    .nav-links a:hover {
-      background: #eef7e7;
-    }
+    .btn { width: 100%; border: none; border-radius: 12px; padding: 14px 18px; background: var(--green); color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; }
+    .btn:hover { background: var(--green-dark); }
+    .btn:disabled { opacity: 0.65; cursor: not-allowed; }
 
-    .hero {
-      background: linear-gradient(135deg, var(--green), var(--lime));
-      border-radius: 24px;
-      padding: 26px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    }
-
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: 2rem;
-    }
-
-    .hero p {
-      margin: 0;
-      line-height: 1.55;
-      max-width: 720px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-    }
-
-    .card h2 {
-      margin: 0 0 6px;
-      color: var(--green-dark);
-    }
-
-    .section-intro {
-      margin: 0 0 20px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .field {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 700;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fff;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 16px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    input:focus,
-    textarea:focus {
-      border-color: var(--green);
-      box-shadow: 0 0 0 3px rgba(122, 193, 67, 0.16);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 110px;
-    }
-
-    .info-box {
-      padding: 15px;
-      margin: 2px 0 18px;
-      border: 1px solid #d8e8cb;
-      border-radius: 14px;
-      background: #f3faed;
-      line-height: 1.55;
-    }
-
-    .info-box strong {
-      color: var(--green-dark);
-    }
-
-    .checkbox-row {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 10px;
-      align-items: start;
-      margin: 4px 0 18px;
-    }
-
-    .checkbox-row input {
-      width: 19px;
-      height: 19px;
-      margin-top: 2px;
-      accent-color: var(--green);
-    }
-
-    .checkbox-row label {
-      margin: 0;
-      font-weight: 400;
-      line-height: 1.45;
-    }
-
-    button {
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 15px 18px;
-      background: var(--green);
-      color: #fff;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.15s, background 0.2s;
-    }
-
-    button:hover:not(:disabled) {
-      background: var(--green-dark);
-      transform: translateY(-1px);
-    }
-
-    button:disabled {
-      cursor: wait;
-      opacity: 0.7;
-    }
-
-    .message {
-      display: none;
-      margin-top: 14px;
-      padding: 13px 15px;
-      border-radius: 12px;
-      line-height: 1.45;
-    }
-
+    .message { display: none; margin-top: 14px; padding: 13px 14px; border-radius: 12px; line-height: 1.45; }
     .message.show { display: block; }
-
-    .message.ok {
-      background: #eef7e7;
-      color: #29561e;
-    }
-
-    .message.error {
-      background: #fdeaea;
-      color: var(--danger);
-    }
-
-    .small-note {
-      margin: 12px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-    }
+    .message.ok { background: #eef7e7; color: #29561e; }
+    .message.error { background: #fdeaea; color: var(--danger); }
 
     @media (max-width: 700px) {
       .page { padding: 14px; }
-      .hero { padding: 21px; }
-      .hero h1 { font-size: 1.55rem; }
-      .form-grid { grid-template-columns: 1fr; gap: 0; }
-      .top-nav { align-items: flex-start; }
+      .hero { padding: 22px; }
+      .form-grid, .info-grid { grid-template-columns: 1fr; gap: 0; }
+      .info-grid { gap: 12px; }
+      .main-navigation { display: grid; grid-template-columns: 1fr; }
+      .nav-button { text-align: center; }
     }
   </style>
 </head>
 <body>
   <main class="page">
-    <nav class="top-nav" aria-label="Tournament navigation">
-      <a class="brand" href="/">PickleTown @ Betshalom</a>
-      <div class="nav-links">
-        <a href="/">Live League</a>
-        <a href="/register.html">Team Registration</a>
-        <a href="/umpire.html">Umpire Login</a>
-      </div>
+    <nav class="main-navigation" aria-label="Main navigation">
+      <a href="/" class="nav-button">Live League</a>
+      <a href="/register" class="nav-button">Register a Team</a>
+      <a href="/umpire-signup" class="nav-button active">Register as an Umpire</a>
+      <a href="/umpire" class="nav-button">Umpire Login</a>
     </nav>
 
     <section class="hero">
       <h1>Register as an Umpire</h1>
-      <p>Join the Limpopo beta doubles tournament officiating team. Approved umpires receive a private Umpire ID and login code for their assigned matches.</p>
+      <p>Join the PickleTown beta tournament umpire team and help manage fair, accurate and organised match scoring.</p>
+    </section>
+
+    <section class="card">
+      <div class="info-grid">
+        <div class="info-box"><strong>R50 per fixture</strong><span class="small">Earned after an assigned match is completed and finalized.</span></div>
+        <div class="info-box"><strong>Private login</strong><span class="small">You receive an Umpire ID and six-digit login code by email.</span></div>
+        <div class="info-box"><strong>Mobile scoring</strong><span class="small">Use the umpire page to record points, bat hire and the final result.</span></div>
+      </div>
     </section>
 
     <form id="umpireForm" class="card">
-      <h2>Your details</h2>
-      <p class="section-intro">Enter your correct contact information so that the organiser can assign matches and send your login details.</p>
+      <h2>Umpire Details</h2>
+      <p class="section-intro">Enter your correct email address because your Umpire ID and private login code will be sent to it.</p>
 
       <div class="form-grid">
-        <div class="field">
-          <label for="name">Name</label>
-          <input id="name" name="name" type="text" maxlength="50" autocomplete="given-name" required />
-        </div>
-
-        <div class="field">
-          <label for="surname">Surname</label>
-          <input id="surname" name="surname" type="text" maxlength="50" autocomplete="family-name" required />
-        </div>
-
-        <div class="field">
-          <label for="phone">Telephone number</label>
-          <input id="phone" name="phone" type="tel" maxlength="25" autocomplete="tel" placeholder="e.g. 082 123 4567" required />
-        </div>
-
-        <div class="field">
-          <label for="email">Email address</label>
-          <input id="email" name="email" type="email" maxlength="120" autocomplete="email" required />
-        </div>
+        <div class="field"><label for="name">Name</label><input id="name" name="name" maxlength="50" required /></div>
+        <div class="field"><label for="surname">Surname</label><input id="surname" name="surname" maxlength="50" required /></div>
+        <div class="field"><label for="phone">Telephone</label><input id="phone" name="phone" type="tel" maxlength="25" placeholder="082 123 4567" required /></div>
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" maxlength="120" required /></div>
       </div>
 
       <div class="field">
-        <label for="experience">Pickleball or officiating experience <span style="font-weight:400; color:#6d7466;">(optional)</span></label>
-        <textarea id="experience" name="experience" maxlength="500" placeholder="Tell us whether you know the standard pickleball rules or have previous officiating experience."></textarea>
+        <label for="experience">Pickleball or umpiring experience <span class="small">(optional)</span></label>
+        <textarea id="experience" name="experience" rows="4" maxlength="500" placeholder="Tell us briefly about your playing, scoring or umpiring experience."></textarea>
       </div>
 
-      <div class="info-box">
-        <strong>Umpire payment:</strong> R50 is allocated to the assigned umpire after the one-hour fixture has been completed and finalized in the scoring system.
+      <div class="checkbox">
+        <input id="consent" name="consent" type="checkbox" required />
+        <label for="consent">I agree to follow the tournament rules, keep my login code private, arrive on time and accurately finalize my assigned fixtures.</label>
       </div>
 
-      <div class="checkbox-row">
-        <input id="agreement" type="checkbox" required />
-        <label for="agreement">I agree to apply the tournament rules fairly, keep my login details private, arrive before my assigned match and only score fixtures allocated to me.</label>
-      </div>
-
-      <button id="submitButton" type="submit">Submit Umpire Registration</button>
+      <button id="submitButton" class="btn" type="submit">Submit Umpire Registration</button>
       <div id="formMessage" class="message" role="status" aria-live="polite"></div>
-      <p class="small-note">Your Umpire ID and private login code will be sent to your email address after successful registration.</p>
     </form>
   </main>
 
   <script>
-    // Replace this only when Google Apps Script gives you a different /exec URL.
     const API_URL = "https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec";
+
+    async function apiPost(action, payload) {
+      const body = new URLSearchParams({ action, ...payload });
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: body.toString(),
+        redirect: "follow"
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || "The umpire registration could not be submitted.");
+      return data;
+    }
 
     const form = document.getElementById("umpireForm");
     const message = document.getElementById("formMessage");
@@ -316,37 +139,20 @@
       message.className = "message show " + type;
     }
 
-    form.addEventListener("submit", async (event) => {
+    form.addEventListener("submit", async event => {
       event.preventDefault();
       button.disabled = true;
-      button.textContent = "Submitting registration…";
-      showMessage("Creating your umpire profile…", "ok");
+      button.textContent = "Submitting...";
+      showMessage("Submitting your umpire registration...", "ok");
 
-      const payload = new URLSearchParams(new FormData(form));
-      payload.set("action", "registerUmpire");
+      const payload = Object.fromEntries(new FormData(form).entries());
 
       try {
-        const response = await fetch(API_URL, {
-          method: "POST",
-          body: payload
-        });
-
-        if (!response.ok) {
-          throw new Error("The registration service could not be reached.");
-        }
-
-        const result = await response.json();
-        if (!result.success) {
-          throw new Error(result.message || "Umpire registration was unsuccessful.");
-        }
-
-        showMessage(
-          `Registration successful. Your Umpire ID is ${result.umpireId}. Your private login code has been emailed to you.`,
-          "ok"
-        );
+        const result = await apiPost("registerUmpire", payload);
+        showMessage(`Registration successful. Your Umpire ID is ${result.umpireId}. Your private login code has been emailed to you.`, "ok");
         form.reset();
       } catch (error) {
-        showMessage(error.message || "Unable to submit your registration. Please try again.", "error");
+        showMessage(error.message, "error");
       } finally {
         button.disabled = false;
         button.textContent = "Submit Umpire Registration";
