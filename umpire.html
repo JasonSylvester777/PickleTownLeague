@@ -3,408 +3,319 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PickleTown Umpire Scoring</title>
+  <title>Umpire Login and Scoring | PickleTown @ Betshalom</title>
   <style>
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f7f9f4;
-      color: #222;
+
+    :root {
+      --green: #7ac143;
+      --green-dark: #4e8f2f;
+      --lime: #ddeb3b;
+      --page: #f7f9f4;
+      --text: #222;
+      --muted: #5f6757;
+      --border: #d7dfcd;
+      --danger: #8b1f1a;
     }
-    .page {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    }
-    .hero {
-      background: linear-gradient(135deg, #7ac143, #ddeb3b);
-      border-radius: 24px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-    h1, h2, h3, p { margin-top: 0; }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 700;
-    }
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #d7dfcd;
-      border-radius: 12px;
-      margin-bottom: 14px;
-      font-size: 16px;
-    }
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: #7ac143;
-      color: #fff;
-      width: 100%;
-    }
-    .match-meta {
-      color: #5f6757;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-    .teams {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 16px;
-    }
-    .team-box {
-      border: 1px solid #e6ecde;
-      border-radius: 18px;
-      padding: 18px;
-      background: #fcfdf9;
-    }
-    .team-name {
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    .players {
-      font-size: 14px;
-      color: #5f6757;
-      margin-bottom: 16px;
-    }
-    .score {
-      font-size: 3rem;
-      font-weight: 900;
-      color: #4e8f2f;
-      margin-bottom: 16px;
-    }
-    .score-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .btn-plus {
-      background: #7ac143;
-      color: #fff;
-      font-size: 24px;
-    }
-    .btn-minus {
-      background: #d9534f;
-      color: #fff;
-      font-size: 24px;
-    }
-    .bottom-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .btn-neutral {
-      background: #eef4e5;
-      color: #222;
-    }
-    .btn-finalize {
-      background: #ddeb3b;
-      color: #222;
-    }
-    .status {
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #eef7e7;
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 6px;
-    }
-    .hidden {
-      display: none;
-    }
-    .message {
-      margin-top: 12px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-    }
-    .message.ok {
-      background: #eef7e7;
-      color: #29561e;
-    }
-    .message.error {
-      background: #fdeaea;
-      color: #8b1f1a;
-    }
-    .small {
-      font-size: 14px;
-      color: #5f6757;
-    }
-    @media (max-width: 768px) {
-      .teams {
-        grid-template-columns: 1fr;
-      }
-      .bottom-actions {
-        grid-template-columns: 1fr;
-      }
-      .score {
-        font-size: 2.5rem;
-      }
+
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--page); color: var(--text); }
+    .page { max-width: 940px; margin: 0 auto; padding: 22px; }
+
+    .main-navigation { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .nav-button { display: inline-block; padding: 11px 16px; background: #fff; color: var(--green-dark); border: 2px solid var(--green); border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.2s ease; }
+    .nav-button:hover, .nav-button.active { background: var(--green); color: #fff; }
+
+    .hero { background: linear-gradient(135deg, var(--green), var(--lime)); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.7rem, 4vw, 2.3rem); }
+    .hero p { margin: 0; line-height: 1.55; }
+
+    .card { background: #fff; border-radius: 20px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .card h2 { margin: 0 0 16px; color: var(--green-dark); }
+    label { display: block; margin-bottom: 8px; font-weight: 700; }
+    input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 14px; font-size: 16px; outline: none; }
+    input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(122,193,67,0.15); }
+
+    .btn { border: none; border-radius: 12px; padding: 13px 16px; font-size: 16px; font-weight: 800; cursor: pointer; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-primary { width: 100%; background: var(--green); color: #fff; }
+    .btn-primary:hover { background: var(--green-dark); }
+    .btn-plus { background: var(--green); color: #fff; font-size: 24px; }
+    .btn-minus { background: #d9534f; color: #fff; font-size: 24px; }
+    .btn-light { background: #eef4e5; color: #222; }
+    .btn-lime { background: var(--lime); color: #222; }
+    .btn-danger { background: #fdeaea; color: var(--danger); }
+
+    .match-meta { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+    .status { display: inline-block; padding: 8px 12px; border-radius: 999px; background: #eef7e7; font-size: 13px; font-weight: 800; }
+    .small { color: var(--muted); font-size: 14px; line-height: 1.45; }
+    .teams { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+    .team-box { border: 1px solid #e6ecde; border-radius: 18px; padding: 18px; background: #fcfdf9; }
+    .team-name { font-size: 1.2rem; font-weight: 900; margin-bottom: 7px; }
+    .players { color: var(--muted); font-size: 14px; min-height: 20px; margin-bottom: 14px; }
+    .score { font-size: 3rem; font-weight: 900; color: var(--green-dark); margin-bottom: 16px; }
+    .score-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .bat-hire { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; padding-top: 18px; border-top: 1px solid #edf1e6; }
+    .bat-hire input { margin-bottom: 0; }
+    .actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+
+    .message { display: none; margin-top: 14px; padding: 13px 14px; border-radius: 12px; line-height: 1.45; }
+    .message.show { display: block; }
+    .message.ok { background: #eef7e7; color: #29561e; }
+    .message.error { background: #fdeaea; color: var(--danger); }
+    .hidden { display: none; }
+
+    @media (max-width: 760px) {
+      .page { padding: 14px; }
+      .hero { padding: 22px; }
+      .main-navigation { display: grid; grid-template-columns: 1fr; }
+      .nav-button { text-align: center; }
+      .teams, .bat-hire, .actions { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <main class="page">
+    <nav class="main-navigation" aria-label="Main navigation">
+      <a href="/" class="nav-button">Live League</a>
+      <a href="/register" class="nav-button">Register a Team</a>
+      <a href="/umpire-signup" class="nav-button">Register as an Umpire</a>
+      <a href="/umpire" class="nav-button active">Umpire Login</a>
+    </nav>
+
     <section class="hero">
       <h1>PickleTown Umpire Scoring</h1>
-      <p>Login with your Umpire ID and code to open your assigned match.</p>
+      <p>Log in with the Umpire ID and private code that were emailed to you.</p>
     </section>
 
     <section class="card" id="loginCard">
       <h2>Umpire Login</h2>
-
       <label for="umpireId">Umpire ID</label>
-      <input id="umpireId" type="text" placeholder="e.g. UMP001" />
-
+      <input id="umpireId" type="text" placeholder="e.g. UMP001" autocomplete="username" />
       <label for="loginCode">Login Code</label>
-      <input id="loginCode" type="password" placeholder="Enter your code" />
-
-      <button class="btn-primary" onclick="loginUmpire()">Open My Match</button>
-
-      <div id="loginMessage" class="message hidden"></div>
+      <input id="loginCode" type="password" inputmode="numeric" placeholder="Enter your six-digit code" autocomplete="current-password" />
+      <button id="loginButton" class="btn btn-primary" type="button">Open My Assigned Match</button>
+      <div id="loginMessage" class="message" role="status" aria-live="polite"></div>
     </section>
 
     <section class="card hidden" id="fixtureCard">
       <h2 id="fixtureLeague">Assigned Match</h2>
       <div class="match-meta" id="fixtureMeta"></div>
-      <div class="status" id="fixtureStatus"></div>
-
-      <div class="small" id="setInfo" style="margin-top: 12px;"></div>
+      <div class="status" id="fixtureStatus">Scheduled</div>
+      <p class="small" id="setInfo" style="margin-top:12px;"></p>
 
       <div class="teams">
         <div class="team-box">
           <div class="team-name" id="teamAName">Team A</div>
-          <div class="players" id="teamAPlayers">Assigned team</div>
+          <div class="players" id="teamAPlayers"></div>
           <div class="score" id="teamAScore">0</div>
           <div class="score-buttons">
-            <button class="btn-plus" onclick="addPoint('A')">+</button>
-            <button class="btn-minus" onclick="removePoint('A')">-</button>
+            <button class="btn btn-plus" data-score="A" data-action="ADD_POINT" type="button">+</button>
+            <button class="btn btn-minus" data-score="A" data-action="REMOVE_POINT" type="button">−</button>
           </div>
         </div>
 
         <div class="team-box">
           <div class="team-name" id="teamBName">Team B</div>
-          <div class="players" id="teamBPlayers">Assigned team</div>
+          <div class="players" id="teamBPlayers"></div>
           <div class="score" id="teamBScore">0</div>
           <div class="score-buttons">
-            <button class="btn-plus" onclick="addPoint('B')">+</button>
-            <button class="btn-minus" onclick="removePoint('B')">-</button>
+            <button class="btn btn-plus" data-score="B" data-action="ADD_POINT" type="button">+</button>
+            <button class="btn btn-minus" data-score="B" data-action="REMOVE_POINT" type="button">−</button>
           </div>
         </div>
       </div>
 
-      <div class="bottom-actions">
-        <button class="btn-neutral" onclick="undoLastAction()">Undo Last Action</button>
-        <button class="btn-finalize" onclick="finalizeMatch()">Finalize Match</button>
+      <div class="bat-hire">
+        <div>
+          <label for="teamABats">Team A bats hired</label>
+          <input id="teamABats" type="number" min="0" max="4" value="0" />
+        </div>
+        <div>
+          <label for="teamBBats">Team B bats hired</label>
+          <input id="teamBBats" type="number" min="0" max="4" value="0" />
+        </div>
       </div>
 
-      <div id="fixtureMessage" class="message hidden"></div>
+      <div class="actions">
+        <button id="saveBats" class="btn btn-light" type="button">Save Bat Hire</button>
+        <button id="undoButton" class="btn btn-light" type="button">Undo Last Score</button>
+        <button id="finalizeButton" class="btn btn-lime" type="button">Finalize Fixture</button>
+        <button id="logoutButton" class="btn btn-danger" type="button">Log Out</button>
+      </div>
+
+      <p class="small">A game is automatically completed when a team reaches at least 11 points with a two-point lead. The points then reset for the next game.</p>
+      <div id="fixtureMessage" class="message" role="status" aria-live="polite"></div>
     </section>
   </main>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec";
 
-    let currentUmpireId = "";
-    let currentFixture = null;
+    let session = null;
+    let fixture = null;
+    const $ = id => document.getElementById(id);
 
     function showMessage(id, text, type) {
-      const el = document.getElementById(id);
-      el.textContent = text;
-      el.className = "message " + type;
-      el.classList.remove("hidden");
+      const element = $(id);
+      element.textContent = text;
+      element.className = "message show " + type;
     }
 
     function hideMessage(id) {
-      const el = document.getElementById(id);
-      el.classList.add("hidden");
-      el.textContent = "";
+      const element = $(id);
+      element.textContent = "";
+      element.className = "message";
     }
 
-    async function getJson(params) {
-      const url = API_URL + "?" + new URLSearchParams(params).toString();
-      const res = await fetch(url);
-      return await res.json();
+    async function apiPost(action, payload) {
+      const body = new URLSearchParams({ action, ...payload });
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: body.toString(),
+        redirect: "follow"
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || "Unable to connect to the scoring system.");
+      return data;
     }
 
-    async function loginUmpire() {
-      hideMessage("loginMessage");
-
-      const umpireId = document.getElementById("umpireId").value.trim();
-      const loginCode = document.getElementById("loginCode").value.trim();
-
-      if (!umpireId || !loginCode) {
-        showMessage("loginMessage", "Please enter your Umpire ID and login code.", "error");
-        return;
-      }
-
-      try {
-        const data = await getJson({
-          action: "umpireLogin",
-          umpireId: umpireId,
-          loginCode: loginCode
-        });
-
-        if (!data.success) {
-          showMessage("loginMessage", data.message || "Login failed.", "error");
-          return;
-        }
-
-        currentUmpireId = umpireId;
-
-        if (!data.fixture) {
-          showMessage("loginMessage", "Login successful, but no fixture is currently assigned.", "ok");
-          return;
-        }
-
-        currentFixture = data.fixture;
-        renderFixture(data.fixture);
-
-        document.getElementById("loginCard").classList.add("hidden");
-        document.getElementById("fixtureCard").classList.remove("hidden");
-      } catch (error) {
-        showMessage("loginMessage", "Could not connect to the scoring system.", "error");
-      }
+    async function umpireApi(action, extra = {}) {
+      if (!session) throw new Error("Please log in again.");
+      return apiPost(action, {
+        umpireId: session.umpireId,
+        loginCode: session.loginCode,
+        ...extra
+      });
     }
 
-    function renderFixture(fixture) {
-      document.getElementById("fixtureLeague").textContent = fixture.leagueName + " - " + fixture.phase;
-      document.getElementById("fixtureMeta").textContent =
-        fixture.date + " • " + fixture.startTime + " - " + fixture.endTime + " • " + fixture.court;
-      document.getElementById("fixtureStatus").textContent = fixture.status || "Scheduled";
+    function renderFixture(currentFixture) {
+      fixture = currentFixture;
+      $("fixtureLeague").textContent = `${currentFixture.leagueName || "PickleTown"} – ${currentFixture.phase || "Match"}`;
+      $("fixtureMeta").textContent = `${currentFixture.date || ""} · ${currentFixture.startTime || ""}–${currentFixture.endTime || ""} · ${currentFixture.court || ""}`;
+      $("fixtureStatus").textContent = currentFixture.status || "Scheduled";
+      $("teamAName").textContent = currentFixture.teamAName || "Team A";
+      $("teamBName").textContent = currentFixture.teamBName || "Team B";
+      $("teamAPlayers").textContent = currentFixture.teamAPlayers || "";
+      $("teamBPlayers").textContent = currentFixture.teamBPlayers || "";
+      $("teamAScore").textContent = currentFixture.score?.currentSetScore?.teamA ?? 0;
+      $("teamBScore").textContent = currentFixture.score?.currentSetScore?.teamB ?? 0;
+      $("setInfo").textContent = `Current game ${currentFixture.score?.currentSet || 1} · Completed games ${currentFixture.score?.teamASetWins || 0}–${currentFixture.score?.teamBSetWins || 0}`;
+      $("teamABats").value = currentFixture.teamABats || 0;
+      $("teamBBats").value = currentFixture.teamBBats || 0;
 
-      document.getElementById("teamAName").textContent = fixture.teamAName;
-      document.getElementById("teamBName").textContent = fixture.teamBName;
-
-      document.getElementById("teamAScore").textContent = fixture.score.currentSetScore.teamA;
-      document.getElementById("teamBScore").textContent = fixture.score.currentSetScore.teamB;
-
-      document.getElementById("setInfo").textContent =
-        "Current Set: " + fixture.score.currentSet +
-        " | Sets Won: " + fixture.score.teamASetWins + " - " + fixture.score.teamBSetWins;
+      const locked = currentFixture.status === "Completed";
+      document.querySelectorAll("[data-score], #saveBats, #undoButton, #finalizeButton, #teamABats, #teamBBats").forEach(element => {
+        element.disabled = locked;
+      });
     }
 
     async function refreshFixture() {
-      if (!currentUmpireId) return;
+      if (!session) return;
+      try {
+        const data = await umpireApi("getUmpireFixture");
+        if (data.fixture) renderFixture(data.fixture);
+      } catch (_) {
+        // Silent background refresh failure. The umpire can continue using the visible screen.
+      }
+    }
+
+    $("loginButton").addEventListener("click", async () => {
+      hideMessage("loginMessage");
+      const umpireId = $("umpireId").value.trim().toUpperCase();
+      const loginCode = $("loginCode").value.trim();
+
+      if (!umpireId || !loginCode) {
+        showMessage("loginMessage", "Enter your Umpire ID and login code.", "error");
+        return;
+      }
+
+      $("loginButton").disabled = true;
+      $("loginButton").textContent = "Logging in...";
 
       try {
-        const data = await getJson({
-          action: "getUmpireFixture",
-          umpireId: currentUmpireId
-        });
+        const data = await apiPost("umpireLogin", { umpireId, loginCode });
+        session = { umpireId, loginCode };
 
-        if (data.success && data.fixture) {
-          currentFixture = data.fixture;
+        if (!data.fixture) {
+          showMessage("loginMessage", "Login successful, but no current or upcoming fixture is assigned to you.", "ok");
+          return;
+        }
+
+        renderFixture(data.fixture);
+        $("loginCard").classList.add("hidden");
+        $("fixtureCard").classList.remove("hidden");
+      } catch (error) {
+        showMessage("loginMessage", error.message, "error");
+      } finally {
+        $("loginButton").disabled = false;
+        $("loginButton").textContent = "Open My Assigned Match";
+      }
+    });
+
+    document.querySelectorAll("[data-score]").forEach(button => {
+      button.addEventListener("click", async () => {
+        hideMessage("fixtureMessage");
+        button.disabled = true;
+
+        try {
+          const side = button.dataset.score;
+          const teamId = side === "A" ? fixture.teamAId : fixture.teamBId;
+          const data = await umpireApi("submitScoreEvent", {
+            fixtureId: fixture.fixtureId,
+            teamId,
+            actionType: button.dataset.action
+          });
           renderFixture(data.fixture);
+        } catch (error) {
+          showMessage("fixtureMessage", error.message, "error");
+        } finally {
+          if (fixture && fixture.status !== "Completed") button.disabled = false;
         }
-      } catch (error) {}
-    }
+      });
+    });
 
-    async function sendScoreAction(teamSide, actionType) {
+    $("saveBats").addEventListener("click", async () => {
+      hideMessage("fixtureMessage");
+      try {
+        const data = await umpireApi("saveBatHire", {
+          fixtureId: fixture.fixtureId,
+          teamABats: $("teamABats").value,
+          teamBBats: $("teamBBats").value
+        });
+        renderFixture(data.fixture);
+        showMessage("fixtureMessage", "Bat hire saved.", "ok");
+      } catch (error) {
+        showMessage("fixtureMessage", error.message, "error");
+      }
+    });
+
+    $("undoButton").addEventListener("click", async () => {
+      hideMessage("fixtureMessage");
+      try {
+        const data = await umpireApi("undoLastScoreEvent", { fixtureId: fixture.fixtureId });
+        renderFixture(data.fixture);
+        showMessage("fixtureMessage", "The last score action was removed.", "ok");
+      } catch (error) {
+        showMessage("fixtureMessage", error.message, "error");
+      }
+    });
+
+    $("finalizeButton").addEventListener("click", async () => {
+      if (!confirm("Finalize this fixture? The completed-game score will become the official result.")) return;
       hideMessage("fixtureMessage");
 
-      if (!currentFixture) return;
-
-      const teamId = teamSide === "A" ? currentFixture.teamAId : currentFixture.teamBId;
-
       try {
-        const data = await getJson({
-          action: "submitScoreEvent",
-          fixtureId: currentFixture.fixtureId,
-          umpireId: currentUmpireId,
-          teamId: teamId,
-          actionType: actionType
-        });
-
-        if (!data.success) {
-          showMessage("fixtureMessage", data.message || "Could not update score.", "error");
-          return;
-        }
-
-        await refreshFixture();
-        showMessage("fixtureMessage", "Score updated.", "ok");
+        const data = await umpireApi("finalizeFixture", { fixtureId: fixture.fixtureId });
+        renderFixture(data.fixture);
+        showMessage("fixtureMessage", data.message || "Fixture finalized successfully.", "ok");
       } catch (error) {
-        showMessage("fixtureMessage", "Could not update score.", "error");
+        showMessage("fixtureMessage", error.message, "error");
       }
-    }
+    });
 
-    function addPoint(teamSide) {
-      sendScoreAction(teamSide, "ADD_POINT");
-    }
-
-    function removePoint(teamSide) {
-      sendScoreAction(teamSide, "REMOVE_POINT");
-    }
-
-    async function undoLastAction() {
-      hideMessage("fixtureMessage");
-
-      if (!currentFixture) return;
-
-      try {
-        const data = await getJson({
-          action: "undoLastScoreEvent",
-          fixtureId: currentFixture.fixtureId,
-          umpireId: currentUmpireId
-        });
-
-        if (!data.success) {
-          showMessage("fixtureMessage", data.message || "Could not undo last action.", "error");
-          return;
-        }
-
-        await refreshFixture();
-        showMessage("fixtureMessage", data.message || "Last action removed.", "ok");
-      } catch (error) {
-        showMessage("fixtureMessage", "Could not undo last action.", "error");
-      }
-    }
-
-    async function finalizeMatch() {
-      hideMessage("fixtureMessage");
-
-      if (!currentFixture) return;
-
-      const confirmed = confirm("Are you sure you want to finalize this match?");
-      if (!confirmed) return;
-
-      try {
-        const data = await getJson({
-          action: "finalizeFixture",
-          fixtureId: currentFixture.fixtureId
-        });
-
-        if (!data.success) {
-          showMessage("fixtureMessage", data.message || "Could not finalize match.", "error");
-          return;
-        }
-
-        await refreshFixture();
-        showMessage("fixtureMessage", "Match finalized successfully.", "ok");
-      } catch (error) {
-        showMessage("fixtureMessage", "Could not finalize match.", "error");
-      }
-    }
-
+    $("logoutButton").addEventListener("click", () => window.location.reload());
     setInterval(refreshFixture, 10000);
   </script>
 </body>
