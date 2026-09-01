@@ -80,6 +80,7 @@
       <a href="/" class="nav-button">Live League</a>
       <a href="/register" class="nav-button">Register a Team</a>
       <a href="/umpire-signup" class="nav-button">Register as an Umpire</a>
+      <a href="/team" class="nav-button">Team Match Centre</a>
       <a href="/rules" class="nav-button">Rules</a>
       <a href="/umpire" class="nav-button active">Umpire Login</a>
     </nav>
@@ -218,7 +219,6 @@
         const data = await umpireApi("getUmpireFixture");
         if (data.fixture) renderFixture(data.fixture);
       } catch (_) {
-        // Silent background refresh failure. The umpire can continue using the visible screen.
       }
     }
 
