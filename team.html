@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Match Centre | PickleTown @ Betshalom</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root { --green:#7ac143; --green-dark:#4e8f2f; --lime:#ddeb3b; --page:#f7f9f4; --text:#222; --muted:#5f6757; --border:#d7dfcd; --danger:#8b1f1a; --amber:#fff6e8; }
+    body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--page); color:var(--text); }
+    .page { max-width:1000px; margin:0 auto; padding:22px; }
+    .main-navigation { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+    .nav-button { display:inline-block; padding:11px 16px; background:#fff; color:var(--green-dark); border:2px solid var(--green); border-radius:12px; font-weight:700; text-decoration:none; }
+    .nav-button:hover,.nav-button.active { background:var(--green); color:#fff; }
+    .hero { background:linear-gradient(135deg,var(--green),var(--lime)); border-radius:24px; padding:28px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
+    .hero h1 { margin:0 0 10px; font-size:clamp(1.7rem,4vw,2.35rem); }
+    .hero p { margin:0; line-height:1.55; }
+    .card { background:#fff; border-radius:20px; padding:22px; margin-bottom:20px; box-shadow:0 8px 24px rgba(0,0,0,.06); }
+    .card h2,.card h3 { color:var(--green-dark); margin-top:0; }
+    label { display:block; margin:0 0 8px; font-weight:700; }
+    input,select,textarea { width:100%; padding:13px 14px; border:1px solid var(--border); border-radius:12px; font:inherit; margin-bottom:14px; background:#fff; }
+    input:focus,select:focus,textarea:focus { outline:none; border-color:var(--green); box-shadow:0 0 0 3px rgba(122,193,67,.15); }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .btn { border:none; border-radius:12px; padding:12px 16px; font-weight:800; cursor:pointer; font-size:15px; }
+    .btn-primary { background:var(--green); color:#fff; }
+    .btn-secondary { background:#eef7e7; color:var(--green-dark); }
+    .btn-danger { background:#fdeaea; color:var(--danger); }
+    .btn:disabled { opacity:.6; cursor:not-allowed; }
+    .status { display:inline-block; padding:7px 11px; border-radius:999px; font-size:13px; font-weight:800; background:#eef7e7; color:var(--green-dark); }
+    .status.pending { background:#fff4d6; color:#795b00; }
+    .status.cancelled { background:#fdeaea; color:var(--danger); }
+    .fixture { border:1px solid #e2e9dc; border-radius:16px; padding:17px; margin-top:14px; background:#fcfdf9; }
+    .fixture-top { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .meta { color:var(--muted); font-size:14px; line-height:1.55; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .reschedule-form { display:none; margin-top:16px; padding:16px; border-radius:14px; background:var(--amber); border:1px solid #efd8b5; }
+    .request { border-left:4px solid var(--green); padding:14px 16px; margin:12px 0; background:#f8fbf3; border-radius:10px; }
+    .message { display:none; padding:13px 14px; border-radius:12px; margin-top:14px; line-height:1.5; }
+    .message.show { display:block; }
+    .message.ok { background:#eef7e7; color:#29561e; }
+    .message.error { background:#fdeaea; color:var(--danger); }
+    .hidden { display:none; }
+    .notice { background:#fff6e8; border:1px solid #efd8b5; border-radius:14px; padding:15px; line-height:1.55; margin-bottom:16px; }
+    @media (max-width:720px) { .page{padding:14px}.hero{padding:22px}.main-navigation{display:grid;grid-template-columns:1fr}.nav-button{text-align:center}.grid2{grid-template-columns:1fr}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%} }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="main-navigation" aria-label="Main navigation">
+      <a href="/" class="nav-button">Live League</a>
+      <a href="/register" class="nav-button">Register a Team</a>
+      <a href="/umpire-signup" class="nav-button">Register as an Umpire</a>
+      <a href="/team" class="nav-button active">Team Match Centre</a>
+      <a href="/rules" class="nav-button">Rules</a>
+      <a href="/umpire" class="nav-button">Umpire Login</a>
+    </nav>
+
+    <section class="hero">
+      <h1>Team Match Centre</h1>
+      <p>View your fixtures, payment status, reschedule requests and forfeits using the private Team ID and access code emailed when your team registered.</p>
+    </section>
+
+    <section class="card" id="loginCard">
+      <h2>Team Login</h2>
+      <div class="grid2">
+        <div><label for="teamId">Team ID</label><input id="teamId" placeholder="e.g. TEAM001" autocomplete="username" /></div>
+        <div><label for="accessCode">Private access code</label><input id="accessCode" type="password" inputmode="numeric" placeholder="6-digit code" autocomplete="current-password" /></div>
+      </div>
+      <button id="loginButton" class="btn btn-primary" type="button">Open Team Match Centre</button>
+      <div id="loginMessage" class="message" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="centre" class="hidden">
+      <section class="card">
+        <div class="fixture-top">
+          <div><h2 id="teamName">My Team</h2><div class="meta" id="teamIdDisplay"></div></div>
+          <span id="paymentStatus" class="status pending">Pending</span>
+        </div>
+        <div class="notice"><strong>Reschedule deadline:</strong> A team that needs to move a fixture must submit a proposed alternative and the opponent must accept it by <strong>14:00 on the original match day</strong>. If it remains unresolved at the cutoff, the requesting team forfeits and the opponent receives 3 league points.</div>
+        <button id="logoutButton" class="btn btn-secondary" type="button">Log Out</button>
+      </section>
+
+      <section class="card">
+        <h2>Reschedule Requests</h2>
+        <div id="requests"><p class="meta">No requests.</p></div>
+      </section>
+
+      <section class="card">
+        <h2>My Fixtures</h2>
+        <div id="fixtures"><p class="meta">No fixtures have been published yet.</p></div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec";
+    let session = null;
+    let data = null;
+    const $ = id => document.getElementById(id);
+
+    async function apiPost(action, payload) {
+      const body = new URLSearchParams({ action, ...payload });
+      const response = await fetch(API_URL, { method:"POST", headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"}, body:body.toString(), redirect:"follow" });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || "Unable to connect to the tournament system.");
+      return result;
+    }
+
+    function showMessage(id,text,type) { const e=$(id); e.textContent=text; e.className="message show "+type; }
+    function escapeHtml(v) { return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+    function opponentName(f) { return f.teamAId===data.team.teamId ? f.teamBName : f.teamAName; }
+
+    async function refresh() {
+      if (!session) return;
+      data = await apiPost("getTeamMatchCentre", session);
+      render();
+    }
+
+    function render() {
+      $("teamName").textContent = data.team.teamName;
+      $("teamIdDisplay").textContent = data.team.teamId;
+      const pay=$("paymentStatus"); pay.textContent="Payment: "+data.team.paymentStatus; pay.className="status "+String(data.team.paymentStatus).toLowerCase();
+      renderRequests();
+      renderFixtures();
+    }
+
+    function renderRequests() {
+      const pending=(data.requests||[]).filter(r=>String(r.status).toLowerCase()==="pending");
+      if (!pending.length) { $("requests").innerHTML='<p class="meta">No pending reschedule requests.</p>'; return; }
+      $("requests").innerHTML=pending.map(r=>{
+        const incoming=r.opponentTeamId===data.team.teamId;
+        return `<div class="request"><strong>${incoming?'Incoming':'Outgoing'} request ${escapeHtml(r.requestId)}</strong><div class="meta">Fixture ${escapeHtml(r.fixtureId)} · Proposed ${escapeHtml(r.proposedDate)} at ${escapeHtml(r.proposedStartTime)}</div>${incoming?`<div class="actions"><button class="btn btn-primary" onclick="respond('${escapeHtml(r.requestId)}','ACCEPT')">Accept</button><button class="btn btn-danger" onclick="respond('${escapeHtml(r.requestId)}','REJECT')">Reject</button></div>`:'<div class="meta">Waiting for the opposing team to respond.</div>'}</div>`;
+      }).join('');
+    }
+
+    function renderFixtures() {
+      const list=data.fixtures||[];
+      if (!list.length) { $("fixtures").innerHTML='<p class="meta">No fixtures have been published yet.</p>'; return; }
+      $("fixtures").innerHTML=list.map(f=>{
+        const completed=f.status==="Completed";
+        const scheduled=f.status==="Scheduled";
+        const canAct=scheduled;
+        const result=completed ? (f.forfeitTeamId ? `Forfeit · Winner: ${escapeHtml(f.winnerTeamName||'')}` : `Result: ${escapeHtml(f.teamAName)} ${f.teamASetsWon}–${f.teamBSetsWon} ${escapeHtml(f.teamBName)}`) : '';
+        return `<div class="fixture"><div class="fixture-top"><div><strong>${escapeHtml(f.phase||'Match')} · ${escapeHtml(opponentName(f))}</strong><div class="meta">${escapeHtml(f.date)} · ${escapeHtml(f.startTime)}–${escapeHtml(f.endTime)} · ${escapeHtml(f.court||'Court TBC')}<br>Umpire: ${escapeHtml(f.umpireName||'To be confirmed')}<br>Reschedule deadline: ${escapeHtml(f.rescheduleDeadline||'14:00 on match day')}</div></div><span class="status">${escapeHtml(f.status)}</span></div>${result?`<p><strong>${result}</strong></p>`:''}${canAct?`<div class="actions"><button class="btn btn-secondary" onclick="toggleReschedule('${escapeHtml(f.fixtureId)}')">Request Reschedule</button><button class="btn btn-danger" onclick="forfeit('${escapeHtml(f.fixtureId)}')">Forfeit Fixture</button></div><div class="reschedule-form" id="res-${escapeHtml(f.fixtureId)}"><div class="grid2"><div><label>Proposed date</label><input id="date-${escapeHtml(f.fixtureId)}" type="date"></div><div><label>Proposed time</label><select id="time-${escapeHtml(f.fixtureId)}"><option value="18:00">18:00</option><option value="19:00">19:00</option></select></div></div><label>Note to opponent (optional)</label><textarea id="note-${escapeHtml(f.fixtureId)}" rows="3" maxlength="300" placeholder="Reason or helpful context"></textarea><button class="btn btn-primary" onclick="submitReschedule('${escapeHtml(f.fixtureId)}')">Send Proposal</button></div>`:''}</div>`;
+      }).join('');
+    }
+
+    function toggleReschedule(id) { const e=$("res-"+id); e.style.display=e.style.display==="block"?"none":"block"; }
+
+    async function submitReschedule(fixtureId) {
+      const proposedDate=$("date-"+fixtureId).value;
+      const proposedStartTime=$("time-"+fixtureId).value;
+      const notes=$("note-"+fixtureId).value;
+      if (!proposedDate) { alert("Choose a proposed date."); return; }
+      try { const r=await apiPost("requestReschedule",{...session,fixtureId,proposedDate,proposedStartTime,notes}); alert(r.message); await refresh(); } catch(e) { alert(e.message); }
+    }
+
+    async function respond(requestId,decision) {
+      try { const r=await apiPost("respondReschedule",{...session,requestId,decision}); alert(r.message); await refresh(); } catch(e) { alert(e.message); }
+    }
+
+    async function forfeit(fixtureId) {
+      if (!confirm("Are you sure your team wants to forfeit this fixture? The opposing team will receive 3 league points.")) return;
+      const reason=prompt("Optional reason for the forfeit:")||"";
+      try { const r=await apiPost("forfeitFixture",{...session,fixtureId,reason}); alert(r.message); await refresh(); } catch(e) { alert(e.message); }
+    }
+
+    $("loginButton").addEventListener("click",async()=>{
+      const teamId=$("teamId").value.trim().toUpperCase(); const accessCode=$("accessCode").value.trim();
+      if(!teamId||!accessCode){showMessage("loginMessage","Enter your Team ID and private access code.","error");return;}
+      $("loginButton").disabled=true;
+      try { data=await apiPost("teamLogin",{teamId,accessCode}); session={teamId,accessCode}; $("loginCard").classList.add("hidden"); $("centre").classList.remove("hidden"); render(); }
+      catch(e){showMessage("loginMessage",e.message,"error");}
+      finally{$("loginButton").disabled=false;}
+    });
+
+    $("logoutButton").addEventListener("click",()=>{session=null;data=null;$("centre").classList.add("hidden");$("loginCard").classList.remove("hidden");$("accessCode").value="";});
+  </script>
+</body>
+</html>
