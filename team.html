@@ -76,7 +76,7 @@
           <div><h2 id="teamName">My Team</h2><div class="meta" id="teamIdDisplay"></div></div>
           <span id="paymentStatus" class="status pending">Pending</span>
         </div>
-        <div class="notice"><strong>Reschedule deadline:</strong> A team that needs to move a fixture must submit a proposed alternative and the opponent must accept it by <strong>14:00 on the original match day</strong>. If it remains unresolved at the cutoff, the requesting team forfeits and the opponent receives 3 league points.</div>
+        <div class="notice"><strong>Reschedule deadlines:</strong> The team needing a change must submit the first proposal by <strong>14:00 on the original match day</strong>. The opponent may accept or propose another slot, and both teams have until <strong>16:00</strong> to reach agreement. If no agreement is reached by 16:00, the fixture is a <strong>draw (1 point each)</strong>. A true no-show is different and gives the opponent 3 points.</div>
         <button id="logoutButton" class="btn btn-secondary" type="button">Log Out</button>
       </section>
 
@@ -129,7 +129,8 @@
       if (!pending.length) { $("requests").innerHTML='<p class="meta">No pending reschedule requests.</p>'; return; }
       $("requests").innerHTML=pending.map(r=>{
         const incoming=r.opponentTeamId===data.team.teamId;
-        return `<div class="request"><strong>${incoming?'Incoming':'Outgoing'} request ${escapeHtml(r.requestId)}</strong><div class="meta">Fixture ${escapeHtml(r.fixtureId)} · Proposed ${escapeHtml(r.proposedDate)} at ${escapeHtml(r.proposedStartTime)}</div>${incoming?`<div class="actions"><button class="btn btn-primary" onclick="respond('${escapeHtml(r.requestId)}','ACCEPT')">Accept</button><button class="btn btn-danger" onclick="respond('${escapeHtml(r.requestId)}','REJECT')">Reject</button></div>`:'<div class="meta">Waiting for the opposing team to respond.</div>'}</div>`;
+        const rid=escapeHtml(r.requestId);
+        return `<div class="request"><strong>${incoming?'Incoming':'Outgoing'} proposal ${rid}</strong><div class="meta">Fixture ${escapeHtml(r.fixtureId)} · Proposed ${escapeHtml(r.proposedDate)} at ${escapeHtml(r.proposedStartTime)}</div>${incoming?`<div class="actions"><button class="btn btn-primary" onclick="respond('${rid}','ACCEPT')">Accept Proposal</button><button class="btn btn-secondary" onclick="toggleCounter('${rid}')">Propose Different Time</button></div><div class="reschedule-form" id="counter-${rid}"><div class="grid2"><div><label>Alternative date</label><input id="counter-date-${rid}" type="date"></div><div><label>Alternative time</label><select id="counter-time-${rid}"><option value="18:00">18:00</option><option value="19:00">19:00</option></select></div></div><label>Note (optional)</label><textarea id="counter-note-${rid}" rows="3" maxlength="300"></textarea><button class="btn btn-primary" onclick="sendCounter('${rid}')">Send Alternative Proposal</button></div>`:'<div class="meta">Waiting for the opposing team. Agreement must be reached by 16:00 on the original match day.</div>'}</div>`;
       }).join('');
     }
 
@@ -140,12 +141,19 @@
         const completed=f.status==="Completed";
         const scheduled=f.status==="Scheduled";
         const canAct=scheduled;
-        const result=completed ? (f.forfeitTeamId ? `Forfeit · Winner: ${escapeHtml(f.winnerTeamName||'')}` : `Result: ${escapeHtml(f.teamAName)} ${f.teamASetsWon}–${f.teamBSetsWon} ${escapeHtml(f.teamBName)}`) : '';
-        return `<div class="fixture"><div class="fixture-top"><div><strong>${escapeHtml(f.phase||'Match')} · ${escapeHtml(opponentName(f))}</strong><div class="meta">${escapeHtml(f.date)} · ${escapeHtml(f.startTime)}–${escapeHtml(f.endTime)} · ${escapeHtml(f.court||'Court TBC')}<br>Umpire: ${escapeHtml(f.umpireName||'To be confirmed')}<br>Reschedule deadline: ${escapeHtml(f.rescheduleDeadline||'14:00 on match day')}</div></div><span class="status">${escapeHtml(f.status)}</span></div>${result?`<p><strong>${result}</strong></p>`:''}${canAct?`<div class="actions"><button class="btn btn-secondary" onclick="toggleReschedule('${escapeHtml(f.fixtureId)}')">Request Reschedule</button><button class="btn btn-danger" onclick="forfeit('${escapeHtml(f.fixtureId)}')">Forfeit Fixture</button></div><div class="reschedule-form" id="res-${escapeHtml(f.fixtureId)}"><div class="grid2"><div><label>Proposed date</label><input id="date-${escapeHtml(f.fixtureId)}" type="date"></div><div><label>Proposed time</label><select id="time-${escapeHtml(f.fixtureId)}"><option value="18:00">18:00</option><option value="19:00">19:00</option></select></div></div><label>Note to opponent (optional)</label><textarea id="note-${escapeHtml(f.fixtureId)}" rows="3" maxlength="300" placeholder="Reason or helpful context"></textarea><button class="btn btn-primary" onclick="submitReschedule('${escapeHtml(f.fixtureId)}')">Send Proposal</button></div>`:''}</div>`;
+        let result='';
+        if(completed){
+          const rs=String(f.rescheduleStatus||'').toLowerCase();
+          if(rs==='no-show forfeit') result=`No-show forfeit · Winner: ${escapeHtml(f.winnerTeamName||'')}`;
+          else if(rs.includes('draw') || (f.forfeitTeamId && !f.winnerTeamId)) result='Draw · 1 league point each';
+          else result=`Result: ${escapeHtml(f.teamAName)} ${f.teamASetsWon}–${f.teamBSetsWon} ${escapeHtml(f.teamBName)}`;
+        }
+        return `<div class="fixture"><div class="fixture-top"><div><strong>${escapeHtml(f.phase||'Match')} · ${escapeHtml(opponentName(f))}</strong><div class="meta">${escapeHtml(f.date)} · ${escapeHtml(f.startTime)}–${escapeHtml(f.endTime)} · ${escapeHtml(f.court||'Court TBC')}<br>Umpire: ${escapeHtml(f.umpireName||'To be confirmed')}<br>Reschedule: ${escapeHtml(f.rescheduleDeadline||'Request by 14:00 · agreement by 16:00')}</div></div><span class="status">${escapeHtml(f.status)}</span></div>${result?`<p><strong>${result}</strong></p>`:''}${canAct?`<div class="actions"><button class="btn btn-secondary" onclick="toggleReschedule('${escapeHtml(f.fixtureId)}')">Request Reschedule</button><button class="btn btn-danger" onclick="forfeit('${escapeHtml(f.fixtureId)}')">Forfeit Fixture</button></div><div class="reschedule-form" id="res-${escapeHtml(f.fixtureId)}"><div class="grid2"><div><label>Proposed date</label><input id="date-${escapeHtml(f.fixtureId)}" type="date"></div><div><label>Proposed time</label><select id="time-${escapeHtml(f.fixtureId)}"><option value="18:00">18:00</option><option value="19:00">19:00</option></select></div></div><label>Note to opponent (optional)</label><textarea id="note-${escapeHtml(f.fixtureId)}" rows="3" maxlength="300" placeholder="Reason or helpful context"></textarea><button class="btn btn-primary" onclick="submitReschedule('${escapeHtml(f.fixtureId)}')">Send Proposal</button></div>`:''}</div>`;
       }).join('');
     }
 
     function toggleReschedule(id) { const e=$("res-"+id); e.style.display=e.style.display==="block"?"none":"block"; }
+    function toggleCounter(id) { const e=$("counter-"+id); e.style.display=e.style.display==="block"?"none":"block"; }
 
     async function submitReschedule(fixtureId) {
       const proposedDate=$("date-"+fixtureId).value;
@@ -159,8 +167,16 @@
       try { const r=await apiPost("respondReschedule",{...session,requestId,decision}); alert(r.message); await refresh(); } catch(e) { alert(e.message); }
     }
 
+    async function sendCounter(requestId) {
+      const proposedDate=$("counter-date-"+requestId).value;
+      const proposedStartTime=$("counter-time-"+requestId).value;
+      const notes=$("counter-note-"+requestId).value;
+      if(!proposedDate){ alert("Choose an alternative date."); return; }
+      try { const r=await apiPost("respondReschedule",{...session,requestId,decision:"COUNTER",proposedDate,proposedStartTime,notes}); alert(r.message); await refresh(); } catch(e) { alert(e.message); }
+    }
+
     async function forfeit(fixtureId) {
-      if (!confirm("Are you sure your team wants to forfeit this fixture? The opposing team will receive 3 league points.")) return;
+      if (!confirm("Declare that your team cannot play this fixture? This will record the fixture as a draw with 1 league point for each team. A no-show is treated separately.")) return;
       const reason=prompt("Optional reason for the forfeit:")||"";
       try { const r=await apiPost("forfeitFixture",{...session,fixtureId,reason}); alert(r.message); await refresh(); } catch(e) { alert(e.message); }
     }
