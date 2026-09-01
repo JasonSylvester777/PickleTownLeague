@@ -143,10 +143,13 @@
         <button id="saveBats" class="btn btn-light" type="button">Save Bat Hire</button>
         <button id="undoButton" class="btn btn-light" type="button">Undo Last Score</button>
         <button id="finalizeButton" class="btn btn-lime" type="button">Finalize Fixture</button>
-        <button id="logoutButton" class="btn btn-danger" type="button">Log Out</button>
+        <button id="noShowA" class="btn btn-danger" type="button">Team A No-Show</button>
+        <button id="noShowB" class="btn btn-danger" type="button">Team B No-Show</button>
+        <button id="logoutButton" class="btn btn-light" type="button">Log Out</button>
       </div>
 
       <p class="small">A game is automatically completed when a team reaches at least 11 points with a two-point lead. The points then reset for the next game.</p>
+      <p class="small"><strong>No-show rule:</strong> Only use a No-Show button if a team has not arrived for its scheduled fixture and there is no agreed reschedule or prior declared forfeit. The opponent receives 3 league points and the absent team is responsible for the umpire fee.</p>
       <div id="fixtureMessage" class="message" role="status" aria-live="polite"></div>
     </section>
   </main>
@@ -199,6 +202,8 @@
       $("fixtureStatus").textContent = currentFixture.status || "Scheduled";
       $("teamAName").textContent = currentFixture.teamAName || "Team A";
       $("teamBName").textContent = currentFixture.teamBName || "Team B";
+      $("noShowA").textContent = (currentFixture.teamAName || "Team A") + " No-Show";
+      $("noShowB").textContent = (currentFixture.teamBName || "Team B") + " No-Show";
       $("teamAPlayers").textContent = currentFixture.teamAPlayers || "";
       $("teamBPlayers").textContent = currentFixture.teamBPlayers || "";
       $("teamAScore").textContent = currentFixture.score?.currentSetScore?.teamA ?? 0;
@@ -208,7 +213,7 @@
       $("teamBBats").value = currentFixture.teamBBats || 0;
 
       const locked = currentFixture.status === "Completed";
-      document.querySelectorAll("[data-score], #saveBats, #undoButton, #finalizeButton, #teamABats, #teamBBats").forEach(element => {
+      document.querySelectorAll("[data-score], #saveBats, #undoButton, #finalizeButton, #noShowA, #noShowB, #teamABats, #teamBBats").forEach(element => {
         element.disabled = locked;
       });
     }
@@ -219,6 +224,7 @@
         const data = await umpireApi("getUmpireFixture");
         if (data.fixture) renderFixture(data.fixture);
       } catch (_) {
+        // Silent background refresh failure. The umpire can continue using the visible screen.
       }
     }
 
@@ -315,6 +321,21 @@
         showMessage("fixtureMessage", error.message, "error");
       }
     });
+
+    async function recordNoShow(absentTeamId, absentTeamName) {
+      if (!confirm(`Confirm ${absentTeamName} did not arrive for this fixture? This records a no-show loss, awards the opponent 3 league points and charges the absent team the umpire fee.`)) return;
+      hideMessage("fixtureMessage");
+      try {
+        const data = await umpireApi("recordNoShow", { fixtureId: fixture.fixtureId, absentTeamId });
+        renderFixture(data.fixture);
+        showMessage("fixtureMessage", data.message || "No-show recorded.", "ok");
+      } catch (error) {
+        showMessage("fixtureMessage", error.message, "error");
+      }
+    }
+
+    $("noShowA").addEventListener("click", () => recordNoShow(fixture.teamAId, fixture.teamAName));
+    $("noShowB").addEventListener("click", () => recordNoShow(fixture.teamBId, fixture.teamBName));
 
     $("logoutButton").addEventListener("click", () => window.location.reload());
     setInterval(refreshFixture, 10000);
