@@ -22,7 +22,7 @@
     .page { max-width: 940px; margin: 0 auto; padding: 22px; }
 
     .main-navigation { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-    .nav-button { display: inline-block; padding: 11px 16px; background: #fff; color: var(--green-dark); border: 2px solid var(--green); border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.2s ease; }
+    .nav-button { display: inline-block; padding: 11px 16px; background: #fff; color: var(--green-dark); border: 2px solid var(--green); border-radius: 12px; font-weight: 700; text-decoration:none; transition: 0.2s ease; }
     .nav-button:hover, .nav-button.active { background: var(--green); color: #fff; }
 
     .hero { background: linear-gradient(135deg, var(--green), var(--lime)); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
@@ -111,12 +111,14 @@
         Each scheduled match: R50 per player / R100 per team.<br />
         Bat hire: R20 per bat per hour.<br /><br />
         <strong>Payment status after registration: Pending.</strong><br />
-        PickleTown will update the team to Paid once payment is confirmed, or Cancelled if the registration is withdrawn.
+        PickleTown will update the team to Paid once payment is confirmed, or Cancelled if the registration is withdrawn.<br /><br />
+        <strong>Scheduling:</strong> Only Paid teams are included in fixtures. Confirmed fixtures for the following week are emailed each Friday. Teams may join the current Spring League through the end of Week 2; registrations received after that are automatically reserved for the next Summer League.<br /><br />
+        <strong>One registration per team/player:</strong> The system blocks duplicate team registrations and prevents a player from being registered more than once in the same season.
       </div>
 
       <div class="checkbox">
         <input id="consent" name="consent" type="checkbox" required />
-        <label for="consent">We agree to the beta tournament rules, scheduling process, payment terms and tournament communication.</label>
+        <label for="consent">We agree to the tournament rules, weekly scheduling process, payment terms and tournament communication.</label>
       </div>
 
       <button id="submitButton" class="btn" type="submit">Submit Team Registration</button>
@@ -159,7 +161,11 @@
 
       try {
         const result = await apiPost("registerTeam", payload);
-        showMessage(`Registration successful. Team ID: ${result.teamId}. Payment status: ${result.paymentStatus || 'Pending'}. Your private Team Match Centre access code has been emailed to both players.`, "ok");
+        if (result.waitlisted) {
+          showMessage(result.message || `The current league is too far in for a fair late entry. Your team has been reserved for ${result.targetSeason || 'the next season'}.`, "ok");
+        } else {
+          showMessage(`Registration successful. Team ID: ${result.teamId}. Payment status: ${result.paymentStatus || 'Pending'}. Your private Team Match Centre access code has been emailed to both players. Once payment is marked Paid, your team becomes eligible for automatic weekly scheduling.`, "ok");
+        }
         form.reset();
       } catch (error) {
         showMessage(error.message, "error");
