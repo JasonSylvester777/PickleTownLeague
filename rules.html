@@ -3,103 +3,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="PickleTown @ Betshalom pickleball tournament rules." />
+  <meta name="description" content="Standard pickleball rules and PickleTown Limpopo Beta Doubles Tournament rules." />
   <title>Rules | PickleTown @ Betshalom</title>
   <style>
-    *{box-sizing:border-box}:root{--green:#7ac143;--green-dark:#4e8f2f;--lime:#ddeb3b;--page:#f7f9f4;--text:#222;--muted:#5f6757}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--page);color:var(--text)}
-    .page{max-width:1040px;margin:0 auto;padding:22px}.main-navigation{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-    .nav-button{display:inline-block;padding:11px 16px;background:#fff;color:var(--green-dark);border:2px solid var(--green);border-radius:12px;font-weight:700;text-decoration:none}.nav-button:hover,.nav-button.active{background:var(--green);color:#fff}
-    .hero{background:linear-gradient(135deg,var(--green),var(--lime));border-radius:24px;padding:28px;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,.08)}.hero h1{margin:0 0 10px;font-size:clamp(1.7rem,4vw,2.35rem)}.hero p{margin:0;line-height:1.55}
-    .card{background:#fff;border-radius:20px;padding:22px;margin-bottom:20px;box-shadow:0 8px 24px rgba(0,0,0,.06)}.card h2{margin:0 0 14px;color:var(--green-dark)}
-    .rule-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.rule{border:1px solid #e1e9d9;border-radius:14px;padding:16px;background:#fcfdf9}.rule strong{display:block;color:var(--green-dark);margin-bottom:6px}.rule p,li{line-height:1.55}.rule p{margin:0}
-    .notice{background:#f4f9ec;border:1px solid #dcebd0;border-radius:14px;padding:16px;line-height:1.55}.fees{width:100%;border-collapse:collapse}.fees th,.fees td{padding:11px 10px;text-align:left;border-bottom:1px solid #e8eee2}.fees th{background:var(--green);color:#fff}.source{font-size:13px;color:var(--muted);line-height:1.5}.source a{color:var(--green-dark);font-weight:700}
-    @media(max-width:700px){.page{padding:14px}.hero{padding:22px}.main-navigation{display:grid;grid-template-columns:1fr}.nav-button{text-align:center}.rule-grid{grid-template-columns:1fr}}
+    * { box-sizing: border-box; }
+    :root {
+      --green: #7ac143;
+      --green-dark: #4e8f2f;
+      --lime: #ddeb3b;
+      --page: #f7f9f4;
+      --text: #222;
+      --muted: #5f6757;
+      --border: #d7dfcd;
+    }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--page); color: var(--text); }
+    .page { max-width: 1040px; margin: 0 auto; padding: 22px; }
+    .main-navigation { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .nav-button { display: inline-block; padding: 11px 16px; background: #fff; color: var(--green-dark); border: 2px solid var(--green); border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.2s ease; }
+    .nav-button:hover, .nav-button.active { background: var(--green); color: #fff; }
+    .hero { background: linear-gradient(135deg, var(--green), var(--lime)); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.7rem, 4vw, 2.35rem); }
+    .hero p { margin: 0; line-height: 1.55; }
+    .card { background: #fff; border-radius: 20px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .card h2 { margin: 0 0 14px; color: var(--green-dark); }
+    .card h3 { color: var(--green-dark); margin-bottom: 6px; }
+    .rule-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+    .rule { border: 1px solid #e1e9d9; border-radius: 14px; padding: 16px; background: #fcfdf9; }
+    .rule strong { display: block; color: var(--green-dark); margin-bottom: 6px; }
+    .rule p, li { line-height: 1.55; }
+    .rule p { margin: 0; }
+    .notice { background: #f4f9ec; border: 1px solid #dcebd0; border-radius: 14px; padding: 16px; line-height: 1.55; }
+    .fees { width: 100%; border-collapse: collapse; }
+    .fees th, .fees td { padding: 11px 10px; text-align: left; border-bottom: 1px solid #e8eee2; }
+    .fees th { background: var(--green); color: white; }
+    .source { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .source a { color: var(--green-dark); font-weight: 700; }
+    @media (max-width: 700px) {
+      .page { padding: 14px; }
+      .hero { padding: 22px; }
+      .main-navigation { display: grid; grid-template-columns: 1fr; }
+      .nav-button { text-align: center; }
+      .rule-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-<main class="page">
-  <nav class="main-navigation" aria-label="Main navigation">
-    <a href="/" class="nav-button">Live League</a>
-    <a href="/register" class="nav-button">Register a Team</a>
-    <a href="/umpire-signup" class="nav-button">Register as an Umpire</a>
-    <a href="/team" class="nav-button">Team Match Centre</a>
-    <a href="/rules" class="nav-button active">Rules</a>
-    <a href="/umpire" class="nav-button">Umpire Login</a>
-  </nav>
+  <main class="page">
+    <nav class="main-navigation" aria-label="Main navigation">
+      <a href="/" class="nav-button">Live League</a>
+      <a href="/register" class="nav-button">Register a Team</a>
+      <a href="/umpire-signup" class="nav-button">Register as an Umpire</a>
+      <a href="/team" class="nav-button">Team Match Centre</a>
+      <a href="/rules" class="nav-button active">Rules</a>
+      <a href="/umpire" class="nav-button">Umpire Login</a>
+    </nav>
 
-  <section class="hero">
-    <h1>PickleTown Tournament Rules</h1>
-    <p>Standard pickleball rules apply unless a PickleTown tournament rule below specifically sets the competition format.</p>
-  </section>
+    <section class="hero">
+      <h1>PickleTown Tournament Rules</h1>
+      <p>Standard pickleball rules apply unless a PickleTown tournament rule below specifically sets the competition format.</p>
+    </section>
 
-  <section class="card">
-    <h2>Standard Pickleball Rules — Quick Guide</h2>
-    <div class="rule-grid">
-      <div class="rule"><strong>1. Serve</strong><p>Serve underhand and diagonally into the opposite service court. The serve must clear the non-volley zone.</p></div>
-      <div class="rule"><strong>2. Two-Bounce Rule</strong><p>The receiving team must let the serve bounce, and the serving team must let the return bounce. After those two bounces, either side may volley or play off a bounce.</p></div>
-      <div class="rule"><strong>3. The Kitchen</strong><p>You may not volley while touching the non-volley zone or its line. Your momentum after a volley may not carry you into the kitchen.</p></div>
-      <div class="rule"><strong>4. Standard Scoring</strong><p>Side-out scoring applies: only the serving side scores. A standard game is to 11 points and must be won by 2.</p></div>
-      <div class="rule"><strong>5. Line Calls</strong><p>A ball touching a line is in, except a served ball touching the kitchen line, which is a fault.</p></div>
-      <div class="rule"><strong>6. Common Faults</strong><p>Examples include hitting out, into the net, volleying before both required bounces, kitchen violations, a double bounce, or touching the net while the ball is live.</p></div>
-    </div>
-    <p class="source">This is a practical tournament summary. For the complete official rules, visit <a href="https://usapickleball.org/rules/" target="_blank" rel="noopener noreferrer">USA Pickleball Rules</a>.</p>
-  </section>
+    <section class="card">
+      <h2>Standard Pickleball Rules — Quick Guide</h2>
+      <div class="rule-grid">
+        <div class="rule"><strong>1. Serve</strong><p>Serve underhand and diagonally into the opposite service court. The serve must clear the non-volley zone.</p></div>
+        <div class="rule"><strong>2. Two-Bounce Rule</strong><p>The receiving team must let the serve bounce, and the serving team must let the return bounce. After those two bounces, either side may volley or play off a bounce.</p></div>
+        <div class="rule"><strong>3. The Kitchen</strong><p>You may not volley while touching the non-volley zone or its line. Your momentum after a volley may not carry you into the kitchen.</p></div>
+        <div class="rule"><strong>4. Standard Scoring</strong><p>Pickleball normally uses side-out scoring: only the serving side scores. A standard game is to 11 points and must be won by 2.</p></div>
+        <div class="rule"><strong>5. Line Calls</strong><p>A ball touching a line is in, except a served ball touching the kitchen line, which is a fault.</p></div>
+        <div class="rule"><strong>6. Common Faults</strong><p>Examples include hitting out, into the net, volleying before both required bounces, kitchen violations, a double bounce, or touching the net while the ball is live.</p></div>
+      </div>
+      <p class="source">This is a practical tournament summary. For the complete official rules, visit <a href="https://usapickleball.org/rules/" target="_blank" rel="noopener noreferrer">USA Pickleball Rules</a>.</p>
+    </section>
 
-  <section class="card">
-    <h2 id="formatHeading">Spring League Tournament Format</h2>
-    <ol>
-      <li>The tournament is played as <strong>doubles</strong>: two registered players per team.</li>
-      <li>The Spring League regular season runs for <strong>9 weeks</strong>, beginning <strong>Monday, 28 September 2026</strong>.</li>
-      <li>Each team is scheduled for a <strong>minimum of 2 and a maximum of 3 regular-season fixtures per week</strong>, subject to the number of registered teams and available court capacity.</li>
-      <li>Regular-season fixtures are scheduled <strong>Monday to Saturday</strong> between <strong>18:00 and 20:00</strong>, subject to court availability.</li>
-      <li>There are <strong>4 courts</strong> available and fixtures are allocated to one-hour slots.</li>
-      <li>The scheduling system avoids playing the same opponent more than once in the same week and tries to avoid a rematch against an opponent played during the <strong>previous 2 weeks</strong>. If there are too few teams to make this possible, the system may allow the least-recent repeat required to complete the schedule.</li>
-      <li>As more teams register, the system automatically spreads fixtures across a wider range of opponents while keeping each team within the 2–3 match weekly limit.</li>
-      <li>During the one-hour fixture, teams play as many completed games as possible. Each game is played to <strong>11, win by 2</strong>.</li>
-      <li>At the end of the fixture hour, the team with the most completed games won wins the fixture.</li>
-      <li>League points: <strong>Win = 3 points, Draw = 1 point each, Loss = 0 points.</strong></li>
-      <li>The live standings use league points first, followed by wins, game difference and games won as tie-break indicators.</li>
-      <li>The top four teams after the regular season qualify for the finals programme.</li>
-      <li><strong>Semifinals and the Grand Final take place on Sunday, 29 November 2026.</strong></li>
-      <li>The appointed umpire controls the official score record. The result becomes official once the umpire finalises the fixture in the tournament system.</li>
-      <li>Players should arrive at least <strong>10 minutes before</strong> their scheduled start. Umpires should arrive at least <strong>15 minutes before</strong> their assigned match.</li>
-    </ol>
-  </section>
+    <section class="card">
+      <h2 id="formatHeading">Spring League Tournament Format</h2>
+      <ol>
+        <li>The tournament is played as <strong>doubles</strong>: two registered players per team.</li>
+        <li>The Spring League regular season runs for <strong>9 weeks</strong>, beginning <strong>Monday, 28 September 2026</strong>.</li>
+        <li>Only teams with payment status <strong>Paid</strong> are included in automatic fixture scheduling. Pending teams remain registered but are not scheduled until payment is confirmed.</li>
+        <li>Each team is scheduled for a <strong>minimum of 2 and a maximum of 3 regular-season fixtures per week</strong>. Two fixtures is the normal weekly target; a third may be used where required for catch-up, balancing or late-entry fairness.</li>
+        <li>Regular-season fixtures are scheduled <strong>Monday to Saturday</strong> between <strong>18:00 and 20:00</strong>, subject to court availability.</li>
+        <li>There are <strong>4 courts</strong> available and fixtures are allocated to one-hour slots.</li>
+        <li>The scheduler avoids the same opponent more than once in the same week and tries to avoid rematches against an opponent played during the <strong>previous 2 weeks</strong>. If there are too few teams, the least-recent repeat may be used.</li>
+        <li>Confirmed fixtures for the following week are issued by email every <strong>Friday</strong>. Once that week's schedule has been emailed, it is treated as confirmed.</li>
+        <li>Teams may still join the current Spring League through the <strong>end of Week 2, Saturday 10 October 2026</strong>. A newly Paid team is automatically allocated from the next available unlocked week.</li>
+        <li>Registrations received after the Week 2 cutoff are not added to the current standings. They are automatically reserved for the <strong>Summer League</strong> and both players are notified by email.</li>
+        <li>A team/player may only be registered once per season. Duplicate team names, emails or player telephone numbers are blocked by the registration system.</li>
+        <li>During the one-hour fixture, teams play as many completed games as possible. Each game is played to <strong>11, win by 2</strong>.</li>
+        <li>At the end of the fixture hour, the team with the most completed games won wins the fixture.</li>
+        <li>League points: <strong>Win = 3 points, Draw = 1 point each, Loss = 0 points.</strong></li>
+        <li>The live standings use league points first, followed by wins, game difference and games won as tie-break indicators.</li>
+        <li>The top four teams after the regular season qualify for the finals programme.</li>
+        <li><strong>Semifinals and the Grand Final take place on Sunday, 29 November 2026.</strong></li>
+        <li>The appointed umpire controls the official score record. The result becomes official once the umpire finalises the fixture in the tournament system.</li>
+        <li>Players should arrive at least <strong>10 minutes before</strong> their scheduled start. Umpires should arrive at least <strong>15 minutes before</strong> their assigned match.</li>
+      </ol>
+    </section>
 
-  <section class="card">
-    <h2>Fees</h2>
-    <table class="fees"><thead><tr><th>Item</th><th>Fee</th><th>How it works</th></tr></thead><tbody>
-      <tr><td>Once-off registration</td><td>R100 per player</td><td>R200 per doubles team for tournament entry.</td></tr>
-      <tr><td>Match fee</td><td>R50 per player</td><td>R100 per team / R200 collected per fixture.</td></tr>
-      <tr><td>Bat hire</td><td>R20 per bat per hour</td><td>Optional. Most players may use their own bats.</td></tr>
-    </tbody></table>
-  </section>
+    <section class="card">
+      <h2>Fees</h2>
+      <table class="fees">
+        <thead><tr><th>Item</th><th>Fee</th><th>How it works</th></tr></thead>
+        <tbody>
+          <tr><td>Once-off registration</td><td>R100 per player</td><td>R200 per doubles team for tournament entry.</td></tr>
+          <tr><td>Match fee</td><td>R50 per player</td><td>R100 per team / R200 collected per fixture.</td></tr>
+          <tr><td>Bat hire</td><td>R20 per bat per hour</td><td>Optional. Most players may use their own bats.</td></tr>
+        </tbody>
+      </table>
+    </section>
 
-  <section class="card">
-    <h2>Communication & Scheduling</h2>
-    <div class="notice">Registered teams receive their fixture schedule by email once the schedule is published. Match-day communication is sent at approximately <strong>07:00</strong> and includes the opponent, date, time, court, assigned umpire, match fee and current league position. A team that needs to move a fixture must submit its first proposal by <strong>14:00</strong>, and both teams have until <strong>16:00</strong> to reach an agreed reschedule. The organiser also receives a daily fixture summary for WhatsApp reminders.</div>
-  </section>
+    <section class="card">
+      <h2>Communication & Scheduling</h2>
+      <div class="notice">
+        Confirmed fixtures for the following week are emailed every <strong>Friday</strong> to both registered players. Each weekly email includes the opponent, date, time, court and assigned umpire (or To Be Confirmed if an umpire has not yet been allocated). Match-day communication is also sent at approximately <strong>07:00</strong> and includes the match details, fee and current league position. The organiser receives a daily fixture summary for WhatsApp reminders.
+      </div>
+    </section>
 
-  <section class="card">
-    <h2>Rescheduling & Forfeits</h2>
-    <ol>
-      <li>If a team cannot play its scheduled fixture, that team must submit a reschedule request through the <strong>Team Match Centre by 14:00 on the original match day</strong>.</li>
-      <li>The opposing team will receive an email with the proposed date and time and may either <strong>accept the proposal</strong> or <strong>propose a different permitted date/time</strong>.</li>
-      <li>The teams may continue proposing alternatives until a mutually agreed slot is reached. All reschedules remain subject to court availability and the tournament's permitted Monday–Saturday evening slots.</li>
-      <li>A mutually agreed reschedule must be confirmed by <strong>16:00 on the original match day</strong>. If no agreement has been reached by 16:00, the fixture is recorded as a <strong>draw</strong> and <strong>each team receives 1 league point</strong>.</li>
-      <li>A team may also declare in advance that it cannot play. This type of declared forfeit is recorded as a <strong>draw – 1 point each</strong>.</li>
-      <li>A <strong>no-show is treated differently</strong>. If a team does not arrive for its scheduled fixture without an agreed reschedule or prior declared forfeit, the absent team loses the fixture, the opposing team receives <strong>3 league points</strong>, and the absent team is responsible for the <strong>R50 umpire fee</strong>.</li>
-      <li>Reschedule/forfeit outcomes do not add artificial games won or lost to the game-difference tie-break.</li>
-      <li>If a registered umpire is also a tournament player, the system will avoid assigning that person to umpire during a time slot in which their own team is playing.</li>
-    </ol>
-  </section>
+    <section class="card">
+      <h2>Rescheduling & Forfeits</h2>
+      <ol>
+        <li>If a team cannot play its scheduled fixture, that team must submit a reschedule request through the <strong>Team Match Centre by 14:00 on the original match day</strong>.</li>
+        <li>The opposing team receives an email with the proposed date and time and may either <strong>accept</strong> or <strong>propose a different permitted date/time</strong>.</li>
+        <li>The teams may continue proposing alternatives until a mutually agreed slot is reached. All reschedules remain subject to court availability and the permitted Monday–Saturday evening slots.</li>
+        <li>A mutually agreed reschedule must be confirmed by <strong>16:00 on the original match day</strong>. If no agreement has been reached by 16:00, the fixture is recorded as a <strong>draw</strong> and <strong>each team receives 1 league point</strong>.</li>
+        <li>A team may also declare in advance that it cannot play. This declared forfeit is recorded as a <strong>draw – 1 point each</strong>.</li>
+        <li>A <strong>no-show is treated differently</strong>. If a team does not arrive without an agreed reschedule or prior declared forfeit, the absent team loses the fixture, the opposing team receives <strong>3 league points</strong>, and the absent team is responsible for the <strong>R50 umpire fee</strong>.</li>
+        <li>Reschedule/forfeit outcomes do not add artificial games won or lost to the game-difference tie-break.</li>
+        <li>If a registered umpire is also a tournament player, the system avoids assigning that person to umpire during a time slot in which their own team is playing.</li>
+      </ol>
+      <div class="notice"><strong>Match-day email:</strong> Players and umpires receive their reminder at approximately 07:00. The organiser also receives the prepared WhatsApp reminder list for that day's fixtures.</div>
+    </section>
 
-  <section class="card"><h2>Fair Play</h2><p>Players and umpires are expected to act respectfully, make honest line calls, accept the official score record and resolve questions calmly. The organiser may clarify an operational rule where a situation was not anticipated, provided the same interpretation is applied consistently to affected teams.</p></section>
-</main>
-<script>
-  const API_URL="https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec";
-  (async()=>{try{const r=await fetch(API_URL+"?"+new URLSearchParams({action:"getPublicLeaderboard",_:Date.now()}),{cache:"no-store"});const d=await r.json();if(r.ok&&d.success){document.getElementById("formatHeading").textContent=(d.season||d.leagueName||"Tournament")+" Tournament Format";}}catch(e){console.error(e);}})();
-</script>
+    <section class="card">
+      <h2>Fair Play</h2>
+      <p>Players and umpires are expected to act respectfully, make honest line calls, accept the umpire's administrative score record and resolve questions calmly. The organiser may clarify an operational rule where a situation was not anticipated, provided the same interpretation is applied consistently to affected teams.</p>
+    </section>
+  </main>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxEBZgTg-SHJuNJojv-wrMOT1WgisOY88zDKyXp-n155FTixR5OBeMGAnhUDlBGT8aJ/exec";
+    async function loadActiveLeagueName() {
+      try {
+        const response = await fetch(API_URL + "?" + new URLSearchParams({ action: "getPublicLeaderboard", _: Date.now() }).toString(), { cache: "no-store" });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          const name = data.season || data.leagueName || "Tournament";
+          document.getElementById("formatHeading").textContent = name + " Tournament Format";
+        }
+      } catch (error) {
+        console.error("Unable to load active league name", error);
+      }
+    }
+    loadActiveLeagueName();
+  </script>
 </body>
 </html>
