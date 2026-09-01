@@ -67,6 +67,7 @@
       <a href="/" class="nav-button">Live League</a>
       <a href="/register" class="nav-button active">Register a Team</a>
       <a href="/umpire-signup" class="nav-button">Register as an Umpire</a>
+      <a href="/team" class="nav-button">Team Match Centre</a>
       <a href="/rules" class="nav-button">Rules</a>
       <a href="/umpire" class="nav-button">Umpire Login</a>
     </nav>
@@ -108,7 +109,9 @@
         <strong>Fee summary</strong><br />
         Once-off registration: R100 per player / R200 per team.<br />
         Each scheduled match: R50 per player / R100 per team.<br />
-        Bat hire: R20 per bat per hour.
+        Bat hire: R20 per bat per hour.<br /><br />
+        <strong>Payment status after registration: Pending.</strong><br />
+        PickleTown will update the team to Paid once payment is confirmed, or Cancelled if the registration is withdrawn.
       </div>
 
       <div class="checkbox">
@@ -156,7 +159,7 @@
 
       try {
         const result = await apiPost("registerTeam", payload);
-        showMessage(`Registration successful. Team ID: ${result.teamId}. Registration slot: ${result.registrationSlot}. Confirmation emails have been sent.`, "ok");
+        showMessage(`Registration successful. Team ID: ${result.teamId}. Payment status: ${result.paymentStatus || 'Pending'}. Your private Team Match Centre access code has been emailed to both players.`, "ok");
         form.reset();
       } catch (error) {
         showMessage(error.message, "error");
